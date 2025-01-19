@@ -13,7 +13,7 @@ class InvestorMatcher:
         }
         self.match_threshold = 70
 
-    def calculate_fund_match_score(investor_funds, startup_deal):
+    def calculate_fund_match_score(self,investor_funds, startup_deal):
         """
         Calculate a fund match score out of 100 based on how close the available funds are to the deal size
         """
@@ -40,7 +40,7 @@ class InvestorMatcher:
             # 0 points if less than 50% of required funds
             return 0
 
-    def Risk_appetite_score(investor, startup):
+    def Risk_appetite_score(self,investor, startup):
         """
         Calculate a match score between an investor and a startup based on risk appetite.
         """
@@ -64,7 +64,7 @@ class InvestorMatcher:
         return score
 
 
-    def calculate_match_score(investor, startup, weights):
+    def calculate_match_score(self,investor, startup, weights):
         """
         Calculate a match score between an investor and a startup based on weights.
         """

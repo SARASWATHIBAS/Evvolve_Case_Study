@@ -28,7 +28,7 @@ def main():
         )
         if st.button("Find Matches"):
             results = matcher.find_matches()
-            investor_matches = results[results['Investor'] == selected_investor].sort(Ascending=False)
+            investor_matches = results[results['Investor'] == selected_investor].sort_values(by='Score',Ascending=False)
 
             st.subheader(f"Matches for {selected_investor}")
             st.dataframe(investor_matches)

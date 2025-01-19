@@ -40,7 +40,7 @@ def main():
         )
         if st.button("Find Matches"):
             results = matcher.find_matches()
-            startup_matches = results[results['Startup'] == selected_startup].sort(ascending=False)
+            startup_matches = results[results['Startup'] == selected_startup].sort_values(by='Score',ascending=False)
 
             st.subheader(f"Matches for {selected_startup}")
             st.dataframe(startup_matches)

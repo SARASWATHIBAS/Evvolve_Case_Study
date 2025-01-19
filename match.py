@@ -75,13 +75,13 @@ class InvestorMatcher:
             score += weights['domain_match']
 
         # Fund availability match
-        score += (weights['fund_match'] * (calculate_fund_match_score(
+        score += (weights['fund_match'] * (self.calculate_fund_match_score(
             investor.get('Fund_Available', 0),
             startup.get('Deal', 0))
         )/100)
 
         # Risk appetite match
-        score += (weights['risk_match'] * Risk_appetite_score(investor, startup))/100
+        score += (weights['risk_match'] * self.Risk_appetite_score(investor, startup))/100
         return score
 
 
@@ -91,14 +91,14 @@ class InvestorMatcher:
         """
         matches = []
 
-        for _, investor in investors.iterrows():
-            for _, startup in startups.iterrows():
-                score = calculate_match_score(investor, startup, weights)
+        for _, investor in self.investors.iterrows():
+            for _, startup in self.startups.iterrows():
+                score = self.calculate_match_score(investor, startup,self.weights)
                 compatibility = (
                     "High Compatibility"
-                    if score >= match_threshold
+                    if score >= self.match_threshold
                     else "Medium Compatibility"
-                    if score >= match_threshold * 0.75
+                    if score >= self.match_threshold * 0.75
                     else "Low Compatibility"
                 )
                 matches.append({

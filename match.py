@@ -85,7 +85,7 @@ class InvestorMatcher:
         return score
 
 
-    def find_matches(investors, startups, weights, match_threshold=100):
+    def find_matches( match_threshold=100):
         """
         Find matches between investors and startups based on a scoring system.
         """

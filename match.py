@@ -3,7 +3,7 @@ import pandas as pd
 
 class InvestorMatcher:
     def __init__(self, investors_file, startups_file):
-        self.nlp = spacy.load('en_core_web_md')
+
         self.investors = pd.read_csv(investors_file)
         self.startups = pd.read_csv(startups_file)
         self.weights = {

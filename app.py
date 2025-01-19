@@ -28,7 +28,7 @@ def main():
         )
         if st.button("Find Matches"):
             results = matcher.find_matches()
-            investor_matches = results[results['Investor'] == selected_investor]
+            investor_matches = results[results['Investor'] == selected_investor].sort()
 
             st.subheader(f"Matches for {selected_investor}")
             st.dataframe(investor_matches)
@@ -40,7 +40,7 @@ def main():
         )
         if st.button("Find Matches"):
             results = matcher.find_matches()
-            startup_matches = results[results['Startup'] == selected_startup]
+            startup_matches = results[results['Startup'] == selected_startup].sort()
 
             st.subheader(f"Matches for {selected_startup}")
             st.dataframe(startup_matches)

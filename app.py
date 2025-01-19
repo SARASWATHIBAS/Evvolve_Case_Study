@@ -1,5 +1,5 @@
 import streamlit as st
-from investor_matching_class import InvestorMatcher
+from match import InvestorMatcher
 
 
 def main():

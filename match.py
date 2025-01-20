@@ -109,7 +109,19 @@ class InvestorMatcher:
             filtered_startups = self.startups
             if value_criteria is not None:
                 for key, value in value_criteria.items():
-                    filtered_startups = filtered_startups[filtered_startups[key] == value]
+                    # do only if the value is not empty
+                    if value:
+                        if key == 'Growth Potential':
+                            if value == 'High':
+                                filtered_startups = filtered_startups[filtered_startups['Growth_Potential'] == 'High']
+                            elif value == 'Medium':
+                                filtered_startups = filtered_startups[filtered_startups['Growth_Potential'] == 'Medium']
+                            elif value == 'Low':
+                                filtered_startups = filtered_startups[filtered_startups['Growth_Potential'] == 'Low']
+                        elif key == 'ROI':
+                            filtered_startups = filtered_startups[filtered_startups['ROI'] >= float(value)]
+                        elif key == 'Investment Stage':
+                            filtered_startups = filtered_startups[filtered_startups['Investment_Stage'] == value]
             for _, startup in self.filtered_startups.iterrows():
                 score = self.calculate_match_score(investor, filtered_startups,self.weights, attribute_criteria)
                 compatibility = (

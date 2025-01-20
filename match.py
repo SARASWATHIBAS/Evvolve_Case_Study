@@ -112,14 +112,31 @@ class InvestorMatcher:
         return score
 
 
-    def find_matches(self):
+    def find_matches(self, value_criteria=None, attribute_criteria=None):
         """
         Find matches between investors and startups based on a scoring system.
         """
         matches = []
 
         for _, investor in self.investors.iterrows():
-            for _, startup in self.startups.iterrows():
+            filtered_startups = self.startups
+            if value_criteria is not None:
+                for key, value in value_criteria.items():
+                    # do only if the value is not empty
+                    if value:
+                        if key == 'Growth Potential':
+                            if value == 'High':
+                                filtered_startups = filtered_startups[filtered_startups['Growth_Potential'] == 'High']
+                            elif value == 'Medium':
+                                filtered_startups = filtered_startups[filtered_startups['Growth_Potential'] == 'Medium']
+                            elif value == 'Low':
+                                filtered_startups = filtered_startups[filtered_startups['Growth_Potential'] == 'Low']
+                        elif key == 'ROI':
+                            filtered_startups = filtered_startups[filtered_startups['ROI'] >= float(value)]
+                        elif key == 'Investment Stage':
+                            filtered_startups = filtered_startups[filtered_startups['Investment_Stage'] == value]
+
+            for _, startup in filtered_startups.iterrows():
                 score = self.calculate_match_score(investor, startup,self.weights)
                 compatibility = (
                     "High Compatibility"

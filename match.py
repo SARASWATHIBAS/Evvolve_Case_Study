@@ -109,7 +109,7 @@ class InvestorMatcher:
                             filtered_startups = filtered_startups[filtered_startups['Investment_Stage'] == value]
             print(filtered_startups.head())
             for _, startup in filtered_startups.iterrows():
-                score = self.calculate_match_score(investor, filtered_startups,self.weights)
+                score = self.calculate_match_score(investor, startup,self.weights)
                 compatibility = (
                     "High Compatibility"
                     if score >= self.match_threshold

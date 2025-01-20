@@ -57,7 +57,7 @@ def main():
             if product_uniqueness:
                 attribute_criteria.append("Risk Appetitie")
         if st.button("Find Matches"):
-            results = matcher.find_matches(value_criteria=value_criteria, attribute_criteria=attribute_criteria)
+            results = matcher.find_matches(value_criteria=value_criteria)
             investor_matches = results[results['Investor'] == selected_investor].sort_values(by='Score',ascending=False)
 
             st.subheader(f"Matches for {selected_investor}")

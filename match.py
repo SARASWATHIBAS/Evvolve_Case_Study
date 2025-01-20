@@ -1,4 +1,4 @@
-import spacy
+
 import pandas as pd
 
 class InvestorMatcher:
@@ -118,7 +118,7 @@ class InvestorMatcher:
         if investor.get('Domain') == startup.get('Domain'):
             score += weights['domain_match']
 
-        # SEctor match
+        # Sector match
         score += (weights['sector_match'] * (self.calculate_portfolio_fit_score(
             investor.get('Past_Portfolio', 0),
             startup)

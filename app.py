@@ -39,11 +39,11 @@ def main():
             
             value_criteria = {}
             if growth_potential:
-                value_criteria["Growth Potential"] = st.text_input("Enter value for Growth Potential:")
+                value_criteria["Growth Potential"] = st.text_input("Enter value for Growth Potential (High, Medium, Low):")
             if roi:
                 value_criteria["ROI"] = st.text_input("Enter value for ROI:")
             if investment_stage:
-                value_criteria["Investment Stage"] = st.text_input("Enter value for Investment Stage:")
+                value_criteria["Investment Stage"] = st.text_input("Enter value for Investment Stage (Growth, Seed, Series A, Series B):")
         elif preference_type == "By Attributes":
             st.write("Select Attribute Criteria:")
             market_size = st.checkbox("Domain")
@@ -58,7 +58,7 @@ def main():
             if product_uniqueness:
                 attribute_criteria.append("Risk Appetitie")
         if st.button("Find Matches"):
-            results = matcher.find_matches()
+            results = matcher.find_matches(value_criteria=value_criteria, attribute_criteria=attribute_criteria)
             investor_matches = results[results['Investor'] == selected_investor].sort_values(by='Score',ascending=False)
 
             st.subheader(f"Matches for {selected_investor}")

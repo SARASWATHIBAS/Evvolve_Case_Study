@@ -88,7 +88,7 @@ class InvestorMatcher:
         return score
 
 
-    def calculate_match_score(self,investor, startup, weights, attribute_criteria=None):
+    def calculate_match_score(self,investor, startup, weights):
         """
         Calculate a match score between an investor and a startup based on weights.
         """
@@ -137,7 +137,15 @@ class InvestorMatcher:
                             filtered_startups = filtered_startups[filtered_startups['Investment_Stage'] == value]
 
             for _, startup in filtered_startups.iterrows():
-                score = self.calculate_match_score(investor, startup,self.weights, attribute_criteria)
+                altered_weights = self.weights
+                if attribute_criteria is not None:
+                    if 'Domain' in attribute_criteria:
+                        altered_weights['domain_match'] = 100/len(attribute_criteria)
+                    if 'Fund Availability' in attribute_criteria:
+                        altered_weights['fund_match'] = 100/len(attribute_criteria)
+                    if 'Risk Appetitie' in attribute_criteria:
+                        altered_weights['risk_match'] = 100/len(attribute_criteria)
+                score = self.calculate_match_score(investor, startup, altered_weights)
                 compatibility = (
                     "High Compatibility"
                     if score >= self.match_threshold

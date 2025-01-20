@@ -78,7 +78,7 @@ class InvestorMatcher:
 
         score = 0
         flag=0
-        startup_sector = startup.get('Sector', '').lower()
+        startup_sector = startup.lower()
 
         # Check sector alignment
         for sector, keywords in portfolio_sectors.items():
@@ -89,7 +89,6 @@ class InvestorMatcher:
         if flag==1:
             score=100
 
-        print(score)
 
         return score
 
@@ -118,10 +117,11 @@ class InvestorMatcher:
         if investor.get('Domain') == startup.get('Domain'):
             score += weights['domain_match']
 
+        investor_past_portfolio = investor.get('Past_Portfolio', 0).split(',')
         # Sector match
         score += (weights['sector_match'] * (self.calculate_portfolio_fit_score(
-            investor.get('Past_Portfolio', 0),
-            startup)
+            investor_past_portfolio,
+            startup.get('Sector',0))
         ) / 100)
 
 
@@ -135,6 +135,9 @@ class InvestorMatcher:
 
         # Risk appetite match
         score += (weights['risk_match'] * self.Risk_appetite_score(investor, startup))/100
+
+        print("Final Score")
+        print(score)
         return score
 
 
@@ -179,3 +182,22 @@ class InvestorMatcher:
                 })
 
         return pd.DataFrame(matches)
+
+def main():
+
+    # Get all matches
+    matcher = InvestorMatcher(
+        investors_file="investors.csv",
+        startups_file="startups.csv"
+    )
+    results = matcher.find_matches()
+
+    # Sort results by score (highest first)
+    sorted_results = results.sort_values('Score', ascending=False)
+
+    # Display results
+    print("\n=== Top Matching Results ===")
+    print(sorted_results.head(10))
+
+if __name__ == "__main__":
+    main()

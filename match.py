@@ -141,10 +141,16 @@ class InvestorMatcher:
                 if attribute_criteria is not None:
                     if 'Domain' in attribute_criteria:
                         altered_weights['domain_match'] = 100/len(attribute_criteria)
+                    else:
+                        altered_weights['domain_match'] = 0
                     if 'Fund Availability' in attribute_criteria:
                         altered_weights['fund_match'] = 100/len(attribute_criteria)
+                    else:
+                        altered_weights['fund_match'] = 0
                     if 'Risk Appetitie' in attribute_criteria:
                         altered_weights['risk_match'] = 100/len(attribute_criteria)
+                    else:
+                        altered_weights['risk_match'] = 0
                 score = self.calculate_match_score(investor, startup, altered_weights)
                 compatibility = (
                     "High Compatibility"

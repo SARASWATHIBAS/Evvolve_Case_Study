@@ -138,7 +138,6 @@ class InvestorMatcher:
 
             for _, startup in filtered_startups.iterrows():
                 altered_weights = self.weights
-                print(self.weights)
                 if len(attribute_criteria) > 0:
                     if 'Domain' in attribute_criteria:
                         altered_weights['domain_match'] = 100/len(attribute_criteria)

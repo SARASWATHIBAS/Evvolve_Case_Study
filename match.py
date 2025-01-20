@@ -64,12 +64,26 @@ class InvestorMatcher:
         return score
 
 
-    def calculate_match_score(self,investor, startup, weights):
+    def calculate_match_score(self,investor, startup, weights, attribute_criteria=None):
         """
         Calculate a match score between an investor and a startup based on weights.
         """
         score = 0
-
+        if attribute_criteria is not None:
+            # depening on the attributes in the attribute_criteria list, i want to calculate weights for each attribute
+            # and add them to the score
+            if 'Domain' in attribute_criteria:
+                weights['domain_match'] = 100/len(attribute_criteria)
+            else:
+                weights['domain_match'] = 0
+            if 'Fund Availability' in attribute_criteria:
+                weights['fund_match'] = 100/len(attribute_criteria)
+            else:
+                weights['fund_match'] = 0
+            if 'Risk Appetitie' in attribute_criteria:
+                weights['risk_match'] = 100/len(attribute_criteria)
+            else:
+                weights['risk_match'] = 0
         # Domain match
         if investor.get('Domain') == startup.get('Domain'):
             score += weights['domain_match']
@@ -85,15 +99,19 @@ class InvestorMatcher:
         return score
 
 
-    def find_matches(self):
+    def find_matches(self, value_criteria=None, attribute_criteria=None):
         """
         Find matches between investors and startups based on a scoring system.
         """
         matches = []
 
         for _, investor in self.investors.iterrows():
-            for _, startup in self.startups.iterrows():
-                score = self.calculate_match_score(investor, startup,self.weights)
+            filtered_startups = self.startups
+            if value_criteria is not None:
+                for key, value in value_criteria.items():
+                    filtered_startups = filtered_startups[filtered_startups[key] == value]
+            for _, startup in self.filtered_startups.iterrows():
+                score = self.calculate_match_score(investor, filtered_startups,self.weights, attribute_criteria)
                 compatibility = (
                     "High Compatibility"
                     if score >= self.match_threshold

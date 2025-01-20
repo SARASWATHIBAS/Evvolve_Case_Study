@@ -84,37 +84,42 @@ def main():
             for idx, match in investor_matches.iterrows():
                 match_key = f"{match['Investor']}_{match['Startup']}"
 
-                with st.expander(f"Rate match with {match['Startup']}", expanded=True):
-                    rating = st.slider(
-                        "Rate this match (1-5)",
-                        min_value=1,
-                        max_value=5,
-                        value=st.session_state.current_ratings.get(match_key, 3),
-                        key=f"rating_{match_key}"
-                    )
+                # Retrieve the current rating from session state
+                current_rating = st.session_state.current_ratings.get(match_key, 3)
 
-                    if st.button("Submit Rating", key=f"submit_{match_key}"):
-                        feedback_data = {
-                            'investor_name': match['Investor'],
-                            'startup_name': match['Startup'],
-                            'match_score': match['Score'],
-                            'user_rating': rating,
-                            'timestamp': pd.Timestamp.now()
-                        }
-                        save_feedback(feedback_data)
-                        st.success("Rating recorded successfully! ⭐")
+                # Slider for rating
+                rating = st.slider(
+                    f"Rate match with {match['Startup']} (Investor: {match['Investor']})",
+                    min_value=1,
+                    max_value=5,
+                    value=current_rating,
+                    key=f"slider_{match_key}"
+                )
+
+                # Update session state when slider value changes
+                if rating != current_rating:
+                    st.session_state.current_ratings[match_key] = rating
+                    feedback_data = {
+                        'investor_name': match['Investor'],
+                        'startup_name': match['Startup'],
+                        'match_score': match['Score'],
+                        'user_rating': rating,
+                        'timestamp': pd.Timestamp.now()
+                    }
+                    save_feedback(feedback_data)
+                    st.success(f"Rating of {rating}⭐ recorded for {match['Startup']} (Investor: {match['Investor']})")
 
     else:
-        selected_startup = st.selectbox(
-            "Select Startup",
-            startup_names
-        )
-        if st.button("Find Matches"):
-            results = matcher.find_matches()
-            startup_matches = results[results['Startup'] == selected_startup].sort_values(by='Score',ascending=False)
+            selected_startup = st.selectbox(
+                "Select Startup",
+                startup_names
+            )
+            if st.button("Find Matches"):
+                results = matcher.find_matches()
+                startup_matches = results[results['Startup'] == selected_startup].sort_values(by='Score',ascending=False)
 
-            st.subheader(f"Matches for {selected_startup}")
-            st.dataframe(startup_matches)
+                st.subheader(f"Matches for {selected_startup}")
+                st.dataframe(startup_matches)
 
 
 if __name__ == "__main__":

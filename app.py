@@ -1,6 +1,17 @@
 import streamlit as st
+import pandas as pd
 from match import InvestorMatcher
 
+
+def save_feedback(feedback_data):
+    """Save feedback to CSV file"""
+    try:
+        existing_feedback = pd.read_csv('feedback.csv')
+        updated_feedback = pd.concat([existing_feedback, pd.DataFrame([feedback_data])])
+    except FileNotFoundError:
+        updated_feedback = pd.DataFrame([feedback_data])
+
+    updated_feedback.to_csv('feedback.csv', index=False)
 
 def main():
     st.title("Investor-Startup Matching Platform")
@@ -62,6 +73,32 @@ def main():
 
             st.subheader(f"Matches for {selected_investor}")
             st.dataframe(investor_matches)
+
+            st.subheader("Provide Feedback")
+            for idx, match in investor_matches.iterrows():
+                with st.expander(f"Rate match with {match['Startup']}"):
+                    rating = st.slider(
+                        "Rate this match (1-5)",
+                        min_value=1,
+                        max_value=5,
+                        key=f"rating_{idx}"
+                    )
+                    interaction = st.selectbox(
+                        "Interaction Type",
+                        ["Initial Contact", "Meeting Scheduled", "Deal Discussion", "Deal Closed"],
+                        key=f"interaction_{idx}"
+                    )
+                    if st.button("Submit Feedback", key=f"submit_{idx}"):
+                        feedback_data = {
+                            'investor_name': match['Investor'],
+                            'startup_name': match['Startup'],
+                            'match_score': match['Score'],
+                            'user_rating': rating,
+                            'interaction_type': interaction,
+                            'timestamp': pd.Timestamp.now()
+                        }
+                        save_feedback(feedback_data)
+                        st.success("Feedback recorded successfully!")
 
     else:
         selected_startup = st.selectbox(

@@ -76,60 +76,34 @@ def main():
 
             st.subheader("Provide Feedback")
             # At the top of your app
-            if 'feedback_submitted' not in st.session_state:
-                st.session_state.feedback_submitted = {}
-
+            # At the top of your app
             if 'current_ratings' not in st.session_state:
                 st.session_state.current_ratings = {}
 
-            if 'current_interactions' not in st.session_state:
-                st.session_state.current_interactions = {}
-
-            # In your feedback collection section
+            # In your main display section after showing matches
             for idx, match in investor_matches.iterrows():
                 match_key = f"{match['Investor']}_{match['Startup']}"
 
-                # Initialize values if not in session state
-                if match_key not in st.session_state.current_ratings:
-                    st.session_state.current_ratings[match_key] = 1
-                if match_key not in st.session_state.current_interactions:
-                    st.session_state.current_interactions[match_key] = "Initial Contact"
-
                 with st.expander(f"Rate match with {match['Startup']}", expanded=True):
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        rating = st.slider(
-                            "Rate this match (1-5)",
-                            min_value=1,
-                            max_value=5,
-                            value=st.session_state.current_ratings[match_key],
-                            key=f"rating_{match_key}"
-                        )
-                        st.session_state.current_ratings[match_key] = rating
+                    rating = st.slider(
+                        "Rate this match (1-5)",
+                        min_value=1,
+                        max_value=5,
+                        value=st.session_state.current_ratings.get(match_key, 3),
+                        key=f"rating_{match_key}"
+                    )
 
-                    with col2:
-                        interaction = st.selectbox(
-                            "Interaction Type",
-                            ["Initial Contact", "Meeting Scheduled", "Deal Discussion", "Deal Closed"],
-                            index=["Initial Contact", "Meeting Scheduled", "Deal Discussion", "Deal Closed"].index(
-                                st.session_state.current_interactions[match_key]
-                            ),
-                            key=f"interaction_{match_key}"
-                        )
-                        st.session_state.current_interactions[match_key] = interaction
-
-                    if st.button("Submit Feedback", key=f"submit_{match_key}"):
+                    if st.button("Submit Rating", key=f"submit_{match_key}"):
                         feedback_data = {
                             'investor_name': match['Investor'],
                             'startup_name': match['Startup'],
                             'match_score': match['Score'],
                             'user_rating': rating,
-                            'interaction_type': interaction,
                             'timestamp': pd.Timestamp.now()
                         }
                         save_feedback(feedback_data)
-                        st.session_state.feedback_submitted[match_key] = True
-                        st.success("Feedback recorded successfully!")
+                        st.success("Rating recorded successfully! ⭐")
+
     else:
         selected_startup = st.selectbox(
             "Select Startup",

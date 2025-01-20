@@ -85,85 +85,42 @@ class InvestorMatcher:
             if sector in investor_portfolio:
                 if any(keyword in startup_sector for keyword in keywords):
                     score = 100
-
-
         return score
 
 
-    def calculate_match_score(self,investor, startup, weights, attribute_criteria=None):
+    def calculate_match_score(self,investor, startup, weights):
         """
         Calculate a match score between an investor and a startup based on weights.
         """
         score = 0
-        if attribute_criteria is not None:
-            # depening on the attributes in the attribute_criteria list, i want to calculate weights for each attribute
-            # and add them to the score
-            if 'Domain' in attribute_criteria:
-                weights['domain_match'] = 100/len(attribute_criteria)
-            else:
-                weights['domain_match'] = 0
-            if 'Fund Availability' in attribute_criteria:
-                weights['fund_match'] = 100/len(attribute_criteria)
-            else:
-                weights['fund_match'] = 0
-            if 'Risk Appetitie' in attribute_criteria:
-                weights['risk_match'] = 100/len(attribute_criteria)
-            else:
-                weights['risk_match'] = 0
         # Domain match
         if investor.get('Domain') == startup.get('Domain'):
             score += weights['domain_match']
-
         investor_past_portfolio = investor.get('Past_Portfolio', 0).split(',')
         # Sector match
         score += (weights['sector_match'] * (self.calculate_portfolio_fit_score(
             investor_past_portfolio,
             startup.get('Sector',0))
         ) / 100)
-
-
         # Fund availability match
         score += (weights['fund_match'] * (self.calculate_fund_match_score(
             investor.get('Fund_Available', 0),
             startup.get('Deal', 0))
         )/100)
-
-
-
         # Risk appetite match
         score += (weights['risk_match'] * self.Risk_appetite_score(investor, startup))/100
-
-        print("Final Score")
-        print(score)
         return score
 
 
-    def find_matches(self, value_criteria=None, attribute_criteria=None):
+    def find_matches(self):
         """
         Find matches between investors and startups based on a scoring system.
         """
         matches = []
 
         for _, investor in self.investors.iterrows():
-            filtered_startups = self.startups
-            if value_criteria is not None:
-                for key, value in value_criteria.items():
-                    # do only if the value is not empty
-                    if value:
-                        if key == 'Growth Potential':
-                            if value == 'High':
-                                filtered_startups = filtered_startups[filtered_startups['Growth_Potential'] == 'High']
-                            elif value == 'Medium':
-                                filtered_startups = filtered_startups[filtered_startups['Growth_Potential'] == 'Medium']
-                            elif value == 'Low':
-                                filtered_startups = filtered_startups[filtered_startups['Growth_Potential'] == 'Low']
-                        elif key == 'ROI':
-                            filtered_startups = filtered_startups[filtered_startups['ROI'] >= float(value)]
-                        elif key == 'Investment Stage':
-                            filtered_startups = filtered_startups[filtered_startups['Investment_Stage'] == value]
-
-            for _, startup in filtered_startups.iterrows():
-                score = self.calculate_match_score(investor, startup,self.weights, attribute_criteria)
+            for _, startup in self.startups.iterrows():
+                score = self.calculate_match_score(investor, startup,self.weights)
                 compatibility = (
                     "High Compatibility"
                     if score >= self.match_threshold

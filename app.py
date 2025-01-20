@@ -26,6 +26,37 @@ def main():
             "Select Investor",
             investor_names
         )
+        # Add radio buttons for preference
+        preference_type = st.radio(
+            "Select preference type:",
+            ["By Value", "By Attributes"]
+        )
+        if preference_type == "By Value":
+            st.write("Select Value Criteria:")
+            growth_potential = st.checkbox("Growth Potential")
+            roi = st.checkbox("ROI")
+            investment_stage = st.checkbox("Investment Stage")
+            
+            value_criteria = {}
+            if growth_potential:
+                value_criteria["Growth Potential"] = st.text_input("Enter value for Growth Potential:")
+            if roi:
+                value_criteria["ROI"] = st.text_input("Enter value for ROI:")
+            if investment_stage:
+                value_criteria["Investment Stage"] = st.text_input("Enter value for Investment Stage:")
+        elif preference_type == "By Attributes":
+            st.write("Select Attribute Criteria:")
+            market_size = st.checkbox("Domain")
+            team_experience = st.checkbox("Fund Availability")
+            product_uniqueness = st.checkbox("Risk Appetitie")
+            
+            attribute_criteria = []
+            if market_size:
+                attribute_criteria.append("Domain")
+            if team_experience:
+                attribute_criteria.append("Fund Availability")
+            if product_uniqueness:
+                attribute_criteria.append("Risk Appetitie")
         if st.button("Find Matches"):
             results = matcher.find_matches()
             investor_matches = results[results['Investor'] == selected_investor].sort_values(by='Score',ascending=False)

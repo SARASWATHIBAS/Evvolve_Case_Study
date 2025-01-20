@@ -7,7 +7,8 @@ class InvestorMatcher:
         self.investors = pd.read_csv(investors_file)
         self.startups = pd.read_csv(startups_file)
         self.weights = {
-            "domain_match": 40,
+            "domain_match": 20,
+            "sector_match":20,
             "fund_match": 30,
             "risk_match": 30
         }
@@ -63,6 +64,35 @@ class InvestorMatcher:
             score += 25
         return score
 
+    def calculate_portfolio_fit_score(self, investor_portfolio, startup):
+        """
+        Calculate portfolio fit score based on historical investments
+        """
+        portfolio_sectors = {
+            'FinTech': ['payments', 'banking', 'insurance', 'lending', 'wealth management'],
+            'HealthTech': ['biotech', 'medical devices', 'healthcare', 'telemedicine'],
+            'AI/ML': ['machine learning', 'deep learning', 'computer vision', 'nlp'],
+            'E-commerce': ['retail tech', 'marketplace', 'd2c', 'logistics'],
+            'Enterprise SaaS': ['b2b software', 'cloud services', 'automation']
+        }
+
+        score = 0
+        flag=0
+        startup_sector = startup.get('Sector', '').lower()
+
+        # Check sector alignment
+        for sector, keywords in portfolio_sectors.items():
+            if sector in investor_portfolio:
+                if any(keyword in startup_sector for keyword in keywords):
+                    flag=1
+
+        if flag==1:
+            score=100
+
+        print(score)
+
+        return score
+
 
     def calculate_match_score(self,investor, startup, weights, attribute_criteria):
         """
@@ -88,11 +118,20 @@ class InvestorMatcher:
         if investor.get('Domain') == startup.get('Domain'):
             score += weights['domain_match']
 
+        # SEctor match
+        score += (weights['sector_match'] * (self.calculate_portfolio_fit_score(
+            investor.get('Past_Portfolio', 0),
+            startup)
+        ) / 100)
+
+
         # Fund availability match
         score += (weights['fund_match'] * (self.calculate_fund_match_score(
             investor.get('Fund_Available', 0),
             startup.get('Deal', 0))
         )/100)
+
+
 
         # Risk appetite match
         score += (weights['risk_match'] * self.Risk_appetite_score(investor, startup))/100

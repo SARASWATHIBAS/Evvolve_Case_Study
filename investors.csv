@@ -1,51 +1,51 @@
-Record ID,Investor_Group_Name,Credibility,Domain,Fund_Available,Risk_Appetite
-96aa04eb-d009-443d-955f-bb4f9c0d584e,Hutchinson PLC,Low,Finance,4976624,High
-12119763-14fa-4e04-a42f-6ba66be4e202,Potts Inc,High,E-commerce,1017246,High
-14b125e2-afaf-47f1-89cd-6069754dcf0d,"Avery, Jackson and Simmons",Low,Healthcare,1659053,Medium
-100f493b-25c4-48b3-82e6-3288f17bdaad,Duncan-Rivas,High,E-commerce,8716986,Medium
-10b3f8a5-35bb-4c5f-a790-eef46b01ad00,Carney Group,High,Education,4776756,High
-f7cef140-b61a-4825-aaae-ef81b4fba17a,"Aguirre, Vincent and Chang",Low,Healthcare,2304561,Medium
-68f87209-d85d-4a2f-b31a-5a8eff1d1825,Ryan LLC,Medium,Finance,962407,Medium
-2dcc4591-de48-415e-b1e8-4cefa8f09418,Gibson-Jones,High,Tech,1287393,Medium
-78a81110-8cd4-4d87-bdf0-aa07e272fe95,Miller-Johnson,Medium,Finance,8267417,Medium
-22d4e56d-ab67-44db-adf1-9d2b0e70da0f,Smith Group,High,Healthcare,6436220,Low
-f4387acc-2148-41cb-8372-708696d3bd60,Gordon PLC,Medium,Tech,4987727,Low
-31307817-348a-4d2b-8d97-52cd2aaedcc6,French Ltd,High,E-commerce,1665932,Low
-6cd07e22-b237-4e13-88a6-00414c252d62,Harris Ltd,High,Healthcare,2282389,Low
-27404c6a-637c-4957-8e93-670b5b840cd9,Smith-Wright,Medium,Finance,2606378,Low
-99cad641-f05d-412e-859e-4015a2009612,Martin Group,Medium,Education,3937685,Low
-3b5607c9-6512-4b4b-938c-9fe7c239f281,Miller and Sons,High,Tech,447940,Medium
-243fe10e-da82-46fc-8628-915807fadbe1,Grant PLC,Low,E-commerce,5314085,High
-83d6b2ea-c220-4068-95d7-033bf09efa2f,Shields PLC,Medium,E-commerce,7002408,Low
-4576c4f6-74e8-4175-a8e4-92f29391edfd,Miller-Lamb,Medium,Tech,9826801,Low
-251b0bda-4408-4fe5-b8f5-687d981bb6ff,Wilson-Miller,Low,Healthcare,3025665,Low
-0199db2c-eaa6-4828-9f96-73c506889505,Hall PLC,Medium,Finance,1320658,High
-54b0f39d-de53-47b0-9897-4a46ebe0b1ea,"Odonnell, Thornton and King",High,Healthcare,8055478,High
-fab39a44-11ce-400d-bfa2-53c9029f9218,"Vaughn, Smith and Larson",High,Education,5500542,High
-58685c7c-bde4-43ae-a717-23f919405f66,"King, Foster and Orr",High,Education,4063163,Low
-8e4266d3-2b40-4fb0-8799-149ae2861ac7,Stephens Inc,Low,Education,9906341,Medium
-b8ae1cea-d96e-4e81-95ec-ab8cd94b84c4,Becker Ltd,High,Finance,1582964,Low
-689a40b7-d0cf-47b4-8fc3-4006c75fc772,Hopkins LLC,High,Healthcare,4124387,Low
-5f54a5e4-60e9-4212-bd25-4fb28d9efbc5,Clark PLC,Low,Tech,5652914,Low
-46df5bdb-d792-4e7a-bb86-54643f6799bb,"Peterson, Turner and Meyers",Medium,Finance,6499460,High
-7d1857bd-8150-42df-8471-031034ce26f4,Williams-Melton,Medium,Healthcare,3263448,Low
-f6639673-3bc9-43cd-b6ce-e66551632be6,"Watkins, Wood and Bird",Low,Finance,8090728,Medium
-312db78c-bc12-4373-b781-0bcc3e5d9aab,Lopez Inc,Medium,Education,7023761,Low
-d32b0438-06c5-436b-989e-50ed24b1dee0,Bowman-Henderson,Low,Education,7694058,High
-6b5bfb49-45f9-40e3-8b22-2f8d22c2a76f,"Rush, Palmer and Perkins",Low,Tech,2213251,High
-4e19f88a-e107-4d49-b878-5bb3b2d7fd27,"Phillips, Vincent and Mcintosh",High,Finance,7094431,Medium
-3bb949b3-4738-4bc2-a881-5f278f54eed8,"King, Mitchell and Williams",Low,Healthcare,1506471,Low
-a5c203ac-5329-4d2b-b3af-1f94e3f53967,Johnson-Hale,Low,E-commerce,8936736,Medium
-299658eb-7195-4441-9396-a7298e560123,"Berry, Williams and Bean",Medium,Tech,6325551,Medium
-ccbb14a9-5e11-4824-b200-ad3b89fb08d9,Maldonado PLC,Medium,Education,365563,Medium
-95119037-130c-4340-89ca-2b62e84bd842,Thompson and Sons,Low,Tech,6098315,Low
-8dc1e105-ddd4-4956-b640-354667b71797,Barker and Sons,High,Tech,8700624,High
-60e242ca-8a81-403c-936b-7ce2d7310346,Williams-Hubbard,High,Tech,4934169,High
-84cc60ce-dcd0-4d44-bee4-3caec178f415,"Williamson, Cruz and Rice",Low,Education,2702071,High
-683e5890-de5b-48eb-848c-ee6248694349,Kirby-Foster,High,Education,5161207,High
-3389bed9-bcad-4382-9d93-c0c523fc3507,Casey-Cabrera,High,E-commerce,8163172,High
-84a6bcd9-5d3d-441c-ab9c-cd71c2eb8aa6,Hodges-Mendoza,High,Education,8519350,Medium
-7e819e1a-5bb3-4a15-8c36-93a6f7f3b06e,Bennett-Roberts,Medium,Tech,1709013,Medium
-08665f0a-f251-4b1c-b995-b33f2c8c03a9,Morris-Brown,Low,Tech,1326190,Low
-db5b4323-d019-451d-bc21-0da7ef6f70b2,Parker-Miller,Low,Tech,7827989,Medium
-b3c4cbc8-d012-460e-8a30-74a65a4045f1,Fleming Ltd,Low,E-commerce,4545468,High
+Record ID,Investor_Group_Name,Credibility,Domain,Fund_Available,Risk_Appetite,Past_Portfolio
+96aa04eb-d009-443d-955f-bb4f9c0d584e,Hutchinson PLC,Low,Finance,4976624,High,"E-commerce, AI/ML"
+12119763-14fa-4e04-a42f-6ba66be4e202,Potts Inc,High,E-commerce,1017246,High,AI/ML
+14b125e2-afaf-47f1-89cd-6069754dcf0d,"Avery, Jackson and Simmons",Low,Healthcare,1659053,Medium,"AI/ML, FinTech, Enterprise SaaS"
+100f493b-25c4-48b3-82e6-3288f17bdaad,Duncan-Rivas,High,E-commerce,8716986,Medium,"E-commerce, Enterprise SaaS, FinTech"
+10b3f8a5-35bb-4c5f-a790-eef46b01ad00,Carney Group,High,Education,4776756,High,"E-commerce, AI/ML"
+f7cef140-b61a-4825-aaae-ef81b4fba17a,"Aguirre, Vincent and Chang",Low,Healthcare,2304561,Medium,E-commerce
+68f87209-d85d-4a2f-b31a-5a8eff1d1825,Ryan LLC,Medium,Finance,962407,Medium,"FinTech, AI/ML, Enterprise SaaS"
+2dcc4591-de48-415e-b1e8-4cefa8f09418,Gibson-Jones,High,Tech,1287393,Medium,"AI/ML, Enterprise SaaS"
+78a81110-8cd4-4d87-bdf0-aa07e272fe95,Miller-Johnson,Medium,Finance,8267417,Medium,"E-commerce, FinTech, AI/ML"
+22d4e56d-ab67-44db-adf1-9d2b0e70da0f,Smith Group,High,Healthcare,6436220,Low,E-commerce
+f4387acc-2148-41cb-8372-708696d3bd60,Gordon PLC,Medium,Tech,4987727,Low,Enterprise SaaS
+31307817-348a-4d2b-8d97-52cd2aaedcc6,French Ltd,High,E-commerce,1665932,Low,"E-commerce, Enterprise SaaS"
+6cd07e22-b237-4e13-88a6-00414c252d62,Harris Ltd,High,Healthcare,2282389,Low,"FinTech, E-commerce, Enterprise SaaS"
+27404c6a-637c-4957-8e93-670b5b840cd9,Smith-Wright,Medium,Finance,2606378,Low,"FinTech, HealthTech"
+99cad641-f05d-412e-859e-4015a2009612,Martin Group,Medium,Education,3937685,Low,"FinTech, AI/ML"
+3b5607c9-6512-4b4b-938c-9fe7c239f281,Miller and Sons,High,Tech,447940,Medium,HealthTech
+243fe10e-da82-46fc-8628-915807fadbe1,Grant PLC,Low,E-commerce,5314085,High,"E-commerce, Enterprise SaaS, HealthTech"
+83d6b2ea-c220-4068-95d7-033bf09efa2f,Shields PLC,Medium,E-commerce,7002408,Low,"E-commerce, FinTech, Enterprise SaaS"
+4576c4f6-74e8-4175-a8e4-92f29391edfd,Miller-Lamb,Medium,Tech,9826801,Low,"HealthTech, E-commerce, AI/ML"
+251b0bda-4408-4fe5-b8f5-687d981bb6ff,Wilson-Miller,Low,Healthcare,3025665,Low,"Enterprise SaaS, FinTech, HealthTech"
+0199db2c-eaa6-4828-9f96-73c506889505,Hall PLC,Medium,Finance,1320658,High,"FinTech, E-commerce, AI/ML"
+54b0f39d-de53-47b0-9897-4a46ebe0b1ea,"Odonnell, Thornton and King",High,Healthcare,8055478,High,"E-commerce, FinTech"
+fab39a44-11ce-400d-bfa2-53c9029f9218,"Vaughn, Smith and Larson",High,Education,5500542,High,"FinTech, Enterprise SaaS, HealthTech"
+58685c7c-bde4-43ae-a717-23f919405f66,"King, Foster and Orr",High,Education,4063163,Low,"Enterprise SaaS, AI/ML"
+8e4266d3-2b40-4fb0-8799-149ae2861ac7,Stephens Inc,Low,Education,9906341,Medium,FinTech
+b8ae1cea-d96e-4e81-95ec-ab8cd94b84c4,Becker Ltd,High,Finance,1582964,Low,"Enterprise SaaS, HealthTech"
+689a40b7-d0cf-47b4-8fc3-4006c75fc772,Hopkins LLC,High,Healthcare,4124387,Low,"Enterprise SaaS, FinTech"
+5f54a5e4-60e9-4212-bd25-4fb28d9efbc5,Clark PLC,Low,Tech,5652914,Low,"FinTech, HealthTech"
+46df5bdb-d792-4e7a-bb86-54643f6799bb,"Peterson, Turner and Meyers",Medium,Finance,6499460,High,"HealthTech, E-commerce"
+7d1857bd-8150-42df-8471-031034ce26f4,Williams-Melton,Medium,Healthcare,3263448,Low,E-commerce
+f6639673-3bc9-43cd-b6ce-e66551632be6,"Watkins, Wood and Bird",Low,Finance,8090728,Medium,FinTech
+312db78c-bc12-4373-b781-0bcc3e5d9aab,Lopez Inc,Medium,Education,7023761,Low,"Enterprise SaaS, E-commerce, FinTech"
+d32b0438-06c5-436b-989e-50ed24b1dee0,Bowman-Henderson,Low,Education,7694058,High,E-commerce
+6b5bfb49-45f9-40e3-8b22-2f8d22c2a76f,"Rush, Palmer and Perkins",Low,Tech,2213251,High,FinTech
+4e19f88a-e107-4d49-b878-5bb3b2d7fd27,"Phillips, Vincent and Mcintosh",High,Finance,7094431,Medium,"AI/ML, E-commerce, HealthTech"
+3bb949b3-4738-4bc2-a881-5f278f54eed8,"King, Mitchell and Williams",Low,Healthcare,1506471,Low,HealthTech
+a5c203ac-5329-4d2b-b3af-1f94e3f53967,Johnson-Hale,Low,E-commerce,8936736,Medium,Enterprise SaaS
+299658eb-7195-4441-9396-a7298e560123,"Berry, Williams and Bean",Medium,Tech,6325551,Medium,E-commerce
+ccbb14a9-5e11-4824-b200-ad3b89fb08d9,Maldonado PLC,Medium,Education,365563,Medium,"E-commerce, AI/ML, Enterprise SaaS"
+95119037-130c-4340-89ca-2b62e84bd842,Thompson and Sons,Low,Tech,6098315,Low,"E-commerce, Enterprise SaaS, AI/ML"
+8dc1e105-ddd4-4956-b640-354667b71797,Barker and Sons,High,Tech,8700624,High,AI/ML
+60e242ca-8a81-403c-936b-7ce2d7310346,Williams-Hubbard,High,Tech,4934169,High,"Enterprise SaaS, HealthTech"
+84cc60ce-dcd0-4d44-bee4-3caec178f415,"Williamson, Cruz and Rice",Low,Education,2702071,High,"AI/ML, HealthTech"
+683e5890-de5b-48eb-848c-ee6248694349,Kirby-Foster,High,Education,5161207,High,E-commerce
+3389bed9-bcad-4382-9d93-c0c523fc3507,Casey-Cabrera,High,E-commerce,8163172,High,"FinTech, AI/ML"
+84a6bcd9-5d3d-441c-ab9c-cd71c2eb8aa6,Hodges-Mendoza,High,Education,8519350,Medium,"E-commerce, AI/ML, HealthTech"
+7e819e1a-5bb3-4a15-8c36-93a6f7f3b06e,Bennett-Roberts,Medium,Tech,1709013,Medium,"Enterprise SaaS, FinTech"
+08665f0a-f251-4b1c-b995-b33f2c8c03a9,Morris-Brown,Low,Tech,1326190,Low,E-commerce
+db5b4323-d019-451d-bc21-0da7ef6f70b2,Parker-Miller,Low,Tech,7827989,Medium,"AI/ML, HealthTech, Enterprise SaaS"
+b3c4cbc8-d012-460e-8a30-74a65a4045f1,Fleming Ltd,Low,E-commerce,4545468,High,"FinTech, Enterprise SaaS, AI/ML"

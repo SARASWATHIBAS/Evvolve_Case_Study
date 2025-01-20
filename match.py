@@ -64,26 +64,11 @@ class InvestorMatcher:
         return score
 
 
-    def calculate_match_score(self,investor, startup, weights, attribute_criteria=None):
+    def calculate_match_score(self,investor, startup, weights):
         """
         Calculate a match score between an investor and a startup based on weights.
         """
         score = 0
-        if attribute_criteria is not None:
-            # depening on the attributes in the attribute_criteria list, i want to calculate weights for each attribute
-            # and add them to the score
-            if 'Domain' in attribute_criteria:
-                weights['domain_match'] = 100/len(attribute_criteria)
-            else:
-                weights['domain_match'] = 0
-            if 'Fund Availability' in attribute_criteria:
-                weights['fund_match'] = 100/len(attribute_criteria)
-            else:
-                weights['fund_match'] = 0
-            if 'Risk Appetitie' in attribute_criteria:
-                weights['risk_match'] = 100/len(attribute_criteria)
-            else:
-                weights['risk_match'] = 0
         # Domain match
         if investor.get('Domain') == startup.get('Domain'):
             score += weights['domain_match']
@@ -99,7 +84,7 @@ class InvestorMatcher:
         return score
 
 
-    def find_matches(self, value_criteria=None, attribute_criteria=None):
+    def find_matches(self, value_criteria=None):
         """
         Find matches between investors and startups based on a scoring system.
         """
@@ -123,7 +108,7 @@ class InvestorMatcher:
                         elif key == 'Investment Stage':
                             filtered_startups = filtered_startups[filtered_startups['Investment_Stage'] == value]
             for _, startup in filtered_startups.iterrows():
-                score = self.calculate_match_score(investor, filtered_startups,self.weights, attribute_criteria)
+                score = self.calculate_match_score(investor, filtered_startups,self.weights)
                 compatibility = (
                     "High Compatibility"
                     if score >= self.match_threshold

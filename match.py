@@ -137,7 +137,7 @@ class InvestorMatcher:
                             filtered_startups = filtered_startups[filtered_startups['Investment_Stage'] == value]
 
             for _, startup in filtered_startups.iterrows():
-                altered_weights = self.weights
+                altered_weights = weights
                 if attribute_criteria is not None:
                     if 'Domain' in attribute_criteria:
                         altered_weights['domain_match'] = 100/len(attribute_criteria)

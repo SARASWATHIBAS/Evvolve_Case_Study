@@ -76,26 +76,39 @@ def main():
 
             st.subheader("Provide Feedback")
             # Inside your feedback collection section:
+            # At the start of your app, initialize session state
+            if 'feedback_states' not in st.session_state:
+                st.session_state.feedback_states = {}
+
+            # In your feedback collection section:
             for idx, match in investor_matches.iterrows():
-                with st.expander(f"Rate match with {match['Startup']}"):
+                # Create unique key for this match
+                match_key = f"{match['Investor']}_{match['Startup']}"
+
+                # Initialize state for this match if not exists
+                if match_key not in st.session_state.feedback_states:
+                    st.session_state.feedback_states[match_key] = True
+
+                with st.expander(f"Rate match with {match['Startup']}",
+                                 expanded=st.session_state.feedback_states[match_key]):
                     col1, col2 = st.columns(2)
                     with col1:
                         rating = st.slider(
                             "Rate this match (1-5)",
                             min_value=1,
                             max_value=5,
-                            key=f"rating_{match['Investor']}_{match['Startup']}"
+                            key=f"rating_{match_key}"
                         )
                     with col2:
                         interaction = st.selectbox(
                             "Interaction Type",
                             ["Initial Contact", "Meeting Scheduled", "Deal Discussion", "Deal Closed"],
-                            key=f"interaction_{match['Investor']}_{match['Startup']}"
+                            key=f"interaction_{match_key}"
                         )
 
                     feedback_button = st.button(
                         "Submit Feedback",
-                        key=f"submit_{match['Investor']}_{match['Startup']}"
+                        key=f"submit_{match_key}"
                     )
 
                     if feedback_button:
@@ -109,6 +122,10 @@ def main():
                         }
                         save_feedback(feedback_data)
                         st.success("Feedback recorded successfully!")
+                        # Keep expander open after submission
+                        st.session_state.feedback_states[match_key] = True
+
+
 
     else:
         selected_startup = st.selectbox(

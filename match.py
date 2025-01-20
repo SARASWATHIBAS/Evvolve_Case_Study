@@ -161,7 +161,7 @@ class InvestorMatcher:
                             filtered_startups = filtered_startups[filtered_startups['ROI'] >= float(value)]
                         elif key == 'Investment Stage':
                             filtered_startups = filtered_startups[filtered_startups['Investment_Stage'] == value]
-            print(filtered_startups.head())
+
             for _, startup in filtered_startups.iterrows():
                 score = self.calculate_match_score(investor, startup,self.weights, attribute_criteria)
                 compatibility = (

@@ -4,7 +4,8 @@ from match import InvestorMatcher
 
 def main():
     st.title("Investor-Startup Matching Platform")
-
+    value_criteria = {}
+    attribute_criteria = []
     # Initialize matcher
     matcher = InvestorMatcher(
         investors_file="investors.csv",
@@ -37,7 +38,6 @@ def main():
             roi = st.checkbox("ROI")
             investment_stage = st.checkbox("Investment Stage")
             
-            value_criteria = {}
             if growth_potential:
                 value_criteria["Growth Potential"] = st.text_input("Enter value for Growth Potential (High, Medium, Low):")
             if roi:
@@ -50,7 +50,6 @@ def main():
             team_experience = st.checkbox("Fund Availability")
             product_uniqueness = st.checkbox("Risk Appetitie")
             
-            attribute_criteria = []
             if market_size:
                 attribute_criteria.append("Domain")
             if team_experience:

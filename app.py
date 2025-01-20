@@ -75,20 +75,30 @@ def main():
             st.dataframe(investor_matches)
 
             st.subheader("Provide Feedback")
+            # Inside your feedback collection section:
             for idx, match in investor_matches.iterrows():
                 with st.expander(f"Rate match with {match['Startup']}"):
-                    rating = st.slider(
-                        "Rate this match (1-5)",
-                        min_value=1,
-                        max_value=5,
-                        key=f"rating_{idx}"
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        rating = st.slider(
+                            "Rate this match (1-5)",
+                            min_value=1,
+                            max_value=5,
+                            key=f"rating_{match['Investor']}_{match['Startup']}"
+                        )
+                    with col2:
+                        interaction = st.selectbox(
+                            "Interaction Type",
+                            ["Initial Contact", "Meeting Scheduled", "Deal Discussion", "Deal Closed"],
+                            key=f"interaction_{match['Investor']}_{match['Startup']}"
+                        )
+
+                    feedback_button = st.button(
+                        "Submit Feedback",
+                        key=f"submit_{match['Investor']}_{match['Startup']}"
                     )
-                    interaction = st.selectbox(
-                        "Interaction Type",
-                        ["Initial Contact", "Meeting Scheduled", "Deal Discussion", "Deal Closed"],
-                        key=f"interaction_{idx}"
-                    )
-                    if st.button("Submit Feedback", key=f"submit_{idx}"):
+
+                    if feedback_button:
                         feedback_data = {
                             'investor_name': match['Investor'],
                             'startup_name': match['Startup'],

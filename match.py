@@ -84,16 +84,13 @@ class InvestorMatcher:
         for sector, keywords in portfolio_sectors.items():
             if sector in investor_portfolio:
                 if any(keyword in startup_sector for keyword in keywords):
-                    flag=1
-
-        if flag==1:
-            score=100
+                    score = 100
 
 
         return score
 
 
-    def calculate_match_score(self,investor, startup, weights, attribute_criteria):
+    def calculate_match_score(self,investor, startup, weights, attribute_criteria=None):
         """
         Calculate a match score between an investor and a startup based on weights.
         """
@@ -182,22 +179,3 @@ class InvestorMatcher:
                 })
 
         return pd.DataFrame(matches)
-
-def main():
-
-    # Get all matches
-    matcher = InvestorMatcher(
-        investors_file="investors.csv",
-        startups_file="startups.csv"
-    )
-    results = matcher.find_matches()
-
-    # Sort results by score (highest first)
-    sorted_results = results.sort_values('Score', ascending=False)
-
-    # Display results
-    print("\n=== Top Matching Results ===")
-    print(sorted_results.head(10))
-
-if __name__ == "__main__":
-    main()

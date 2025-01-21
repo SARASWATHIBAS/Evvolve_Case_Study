@@ -3,6 +3,10 @@ import pandas as pd
 from match import InvestorMatcher
 
 
+# Initialize session state for feedback
+if 'feedback_submitted' not in st.session_state:
+    st.session_state.feedback_submitted = set()
+
 def save_feedback(feedback_data):
     """Save feedback to CSV file"""
     try:
@@ -12,7 +16,7 @@ def save_feedback(feedback_data):
         updated_feedback = pd.DataFrame([feedback_data])
     updated_feedback.to_csv('feedback.csv', index=False)
 
-def handle_feedback(investor, startup, score, rating, comment=''):
+def handle_feedback(investor, startup, score, rating, comment):
     feedback_data = {
         'investor_name': investor,
         'startup_name': startup,
@@ -22,7 +26,7 @@ def handle_feedback(investor, startup, score, rating, comment=''):
         'timestamp': pd.Timestamp.now()
     }
     save_feedback(feedback_data)
-    return True
+    st.session_state.feedback_submitted.add((investor, startup))
 
 def main():
     st.title("Investor-Startup Matching Platform")
@@ -91,38 +95,32 @@ def main():
 
             st.subheader("Provide Feedback")
 
-            for idx, match in investor_matches.iterrows():
+            for idx, match in results.iterrows():
                 match_key = f"{match['Investor']}_{match['Startup']}"
 
-                if match_key not in st.session_state.feedback_submitted:
+                if (match['Investor'], match['Startup']) not in st.session_state.feedback_submitted:
                     with st.expander(f"Rate match with {match['Startup']}"):
-                        col1, col2 = st.columns([1, 2])
-
-                        with col1:
-                            rating = st.radio(
-                                "Rating",
-                                options=['⭐', '⭐⭐', '⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐⭐⭐'],
-                                key=f"rating_{match_key}",
-                                horizontal=True
-                            )
-
-                        with col2:
-                            comment = st.text_area(
-                                "Additional Comments (optional)",
-                                key=f"comment_{match_key}"
-                            )
+                        rating = st.radio(
+                            "Rating",
+                            options=['⭐', '⭐⭐', '⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐⭐⭐'],
+                            key=f"rating_{match_key}",
+                            horizontal=True
+                        )
+                        comment = st.text_area(
+                            "Additional Comments (optional)",
+                            key=f"comment_{match_key}"
+                        )
 
                         if st.button("Submit Feedback", key=f"submit_{match_key}"):
-                            rating_value = len(rating)  # Convert stars to numeric rating
-                            if handle_feedback(
-                                    match['Investor'],
-                                    match['Startup'],
-                                    match['Score'],
-                                    rating_value,
-                                    comment
-                            ):
-                                st.session_state.feedback_submitted.add(match_key)
-                                st.success("Thank you for your feedback!")
+                            rating_value = len(rating)
+                            handle_feedback(
+                                match['Investor'],
+                                match['Startup'],
+                                match['Score'],
+                                rating_value,
+                                comment
+                            )
+                            st.success("Thank you for your feedback!")
                 else:
                     st.info("✓ Feedback submitted")
 

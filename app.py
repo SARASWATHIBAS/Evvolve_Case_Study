@@ -10,20 +10,26 @@ def save_feedback(feedback_data):
         updated_feedback = pd.concat([existing_feedback, pd.DataFrame([feedback_data])])
     except FileNotFoundError:
         updated_feedback = pd.DataFrame([feedback_data])
-
     updated_feedback.to_csv('feedback.csv', index=False)
+
+def handle_feedback(investor, startup, score, rating, comment=''):
+    feedback_data = {
+        'investor_name': investor,
+        'startup_name': startup,
+        'match_score': score,
+        'user_rating': rating,
+        'comment': comment,
+        'timestamp': pd.Timestamp.now()
+    }
+    save_feedback(feedback_data)
+    return True
 
 def main():
     st.title("Investor-Startup Matching Platform")
-    # Initialize session state
-    if 'current_ratings' not in st.session_state:
-        st.session_state.current_ratings = {}
-    if 'feedback_messages' not in st.session_state:
-        st.session_state.feedback_messages = {}
-    if 'current_ratings' not in st.session_state:
-        st.session_state.current_ratings = {}
-    if 'feedback_messages' not in st.session_state:
-        st.session_state.feedback_messages = {}
+    # Initialize session states
+    if 'feedback_submitted' not in st.session_state:
+        st.session_state.feedback_submitted = set()
+
     value_criteria = {}
     attribute_criteria = []
     # Initialize matcher
@@ -84,51 +90,53 @@ def main():
             st.dataframe(investor_matches)
 
             st.subheader("Provide Feedback")
-            # At the top of your app
-            # At the top of your app
-            if 'current_ratings' not in st.session_state:
-                st.session_state.current_ratings = {}
 
-            # In your main display section after showing matches
             for idx, match in investor_matches.iterrows():
                 match_key = f"{match['Investor']}_{match['Startup']}"
 
-                # Retrieve the current rating from session state
-                current_rating = st.session_state.current_ratings.get(match_key, 3)
+                if match_key not in st.session_state.feedback_submitted:
+                    with st.expander(f"Rate match with {match['Startup']}"):
+                        col1, col2 = st.columns([1, 2])
 
-                # Slider for rating
-                rating = st.slider(
-                    f"Rate match with {match['Startup']} (Investor: {match['Investor']})",
-                    min_value=1,
-                    max_value=5,
-                    value=current_rating,
-                    key=f"slider_{match_key}"
-                )
+                        with col1:
+                            rating = st.radio(
+                                "Rating",
+                                options=['⭐', '⭐⭐', '⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐⭐⭐'],
+                                key=f"rating_{match_key}",
+                                horizontal=True
+                            )
 
-                # Update session state when slider value changes
-                if rating != current_rating:
-                    st.session_state.current_ratings[match_key] = rating
-                    feedback_data = {
-                        'investor_name': match['Investor'],
-                        'startup_name': match['Startup'],
-                        'match_score': match['Score'],
-                        'user_rating': rating,
-                        'timestamp': pd.Timestamp.now()
-                    }
-                    save_feedback(feedback_data)
-                    st.success(f"Rating of {rating}⭐ recorded for {match['Startup']} (Investor: {match['Investor']})")
+                        with col2:
+                            comment = st.text_area(
+                                "Additional Comments (optional)",
+                                key=f"comment_{match_key}"
+                            )
+
+                        if st.button("Submit Feedback", key=f"submit_{match_key}"):
+                            rating_value = len(rating)  # Convert stars to numeric rating
+                            if handle_feedback(
+                                    match['Investor'],
+                                    match['Startup'],
+                                    match['Score'],
+                                    rating_value,
+                                    comment
+                            ):
+                                st.session_state.feedback_submitted.add(match_key)
+                                st.success("Thank you for your feedback!")
+                else:
+                    st.info("✓ Feedback submitted")
 
     else:
-            selected_startup = st.selectbox(
-                "Select Startup",
-                startup_names
-            )
-            if st.button("Find Matches"):
-                results = matcher.find_matches()
-                startup_matches = results[results['Startup'] == selected_startup].sort_values(by='Score',ascending=False)
+                selected_startup = st.selectbox(
+                    "Select Startup",
+                    startup_names
+                )
+                if st.button("Find Matches"):
+                    results = matcher.find_matches()
+                    startup_matches = results[results['Startup'] == selected_startup].sort_values(by='Score',ascending=False)
 
-                st.subheader(f"Matches for {selected_startup}")
-                st.dataframe(startup_matches)
+                    st.subheader(f"Matches for {selected_startup}")
+                    st.dataframe(startup_matches)
 
 
 if __name__ == "__main__":

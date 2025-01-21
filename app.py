@@ -3,6 +3,11 @@ import pandas as pd
 from match import InvestorMatcher
 from git import Repo
 
+
+# Initialize session state for feedback
+if 'feedback_submitted' not in st.session_state:
+    st.session_state.feedback_submitted = set()
+
 def save_feedback_to_git(feedback_data):
     """Save feedback to CSV and push to Git repository"""
     csv_file = 'feedback.csv'
@@ -13,27 +18,7 @@ def save_feedback_to_git(feedback_data):
         updated_feedback = pd.DataFrame([feedback_data])
     updated_feedback.to_csv(csv_file, index=False)
 
-    # Push CSV to Git repository
-    repo_path = '.'  # Assuming the script is running in the Git repo directory
-    repo = Repo(repo_path)
-    repo.git.add(csv_file)
-    repo.index.commit("Update feedback CSV")
-    origin = repo.remote(name='origin')
-    origin.push()
-
-# Initialize session state for feedback
-if 'feedback_submitted' not in st.session_state:
-    st.session_state.feedback_submitted = set()
-
-def save_feedback_to_git(feedback_data):
-    """Save feedback to CSV and push to Git repository"""
-    csv_file = 'feedback.csv'
-    if os.path.exists(csv_file):
-        existing_feedback = pd.read_csv(csv_file)
-        updated_feedback = pd.concat([existing_feedback, pd.DataFrame([feedback_data])])
-    else:
-        updated_feedback = pd.DataFrame([feedback_data])
-    updated_feedback.to_csv(csv_file, index=False)
+    print("IIII")
 
     # Push CSV to Git repository
     repo_path = '.'  # Assuming the script is running in the Git repo directory
@@ -52,7 +37,7 @@ def handle_feedback(investor, startup, score, rating, comment):
         'comment': comment,
         'timestamp': pd.Timestamp.now()
     }
-    save_feedback(feedback_data)
+    save_feedback_to_git(feedback_data)
     st.session_state.feedback_submitted.add((investor, startup))
 
 def main():
@@ -137,6 +122,8 @@ def main():
                             "Additional Comments (optional)",
                             key=f"comment_{match_key}"
                         )
+
+                        print("HHHH")
 
                         if st.button("Submit Feedback", key=f"submit_{match_key}"):
                             rating_value = len(rating)

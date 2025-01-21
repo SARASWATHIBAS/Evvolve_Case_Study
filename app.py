@@ -1,20 +1,31 @@
 import streamlit as st
 import pandas as pd
 from match import InvestorMatcher
+from git import Repo
+import os
 
 
 # Initialize session state for feedback
 if 'feedback_submitted' not in st.session_state:
     st.session_state.feedback_submitted = set()
 
-def save_feedback(feedback_data):
-    """Save feedback to CSV file"""
-    try:
-        existing_feedback = pd.read_csv('feedback.csv')
+def save_feedback_to_git(feedback_data):
+    """Save feedback to CSV and push to Git repository"""
+    csv_file = 'feedback.csv'
+    if os.path.exists(csv_file):
+        existing_feedback = pd.read_csv(csv_file)
         updated_feedback = pd.concat([existing_feedback, pd.DataFrame([feedback_data])])
-    except FileNotFoundError:
+    else:
         updated_feedback = pd.DataFrame([feedback_data])
-    updated_feedback.to_csv('feedback.csv', index=False)
+    updated_feedback.to_csv(csv_file, index=False)
+
+    # Push CSV to Git repository
+    repo_path = '.'  # Assuming the script is running in the Git repo directory
+    repo = Repo(repo_path)
+    repo.git.add(csv_file)
+    repo.index.commit("Update feedback CSV")
+    origin = repo.remote(name='origin')
+    origin.push()
 
 def handle_feedback(investor, startup, score, rating, comment):
     feedback_data = {

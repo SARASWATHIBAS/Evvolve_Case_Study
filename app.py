@@ -15,6 +15,11 @@ def save_feedback(feedback_data):
 
 def main():
     st.title("Investor-Startup Matching Platform")
+    # Initialize session state
+    if 'current_ratings' not in st.session_state:
+        st.session_state.current_ratings = {}
+    if 'feedback_messages' not in st.session_state:
+        st.session_state.feedback_messages = {}
     if 'current_ratings' not in st.session_state:
         st.session_state.current_ratings = {}
     if 'feedback_messages' not in st.session_state:

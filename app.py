@@ -28,6 +28,7 @@ def handle_feedback(investor, startup, score, rating, comment):
     }
     save_feedback_to_csv(feedback_data)
     st.session_state.feedback_submitted.add((investor, startup))
+
 def calculate_feedback_adjustment(investor, startup):
     try:
         feedback_df = pd.read_csv('feedback.csv')
@@ -36,11 +37,13 @@ def calculate_feedback_adjustment(investor, startup):
             (feedback_df['startup_name'] == startup)
         ]
         if not relevant_feedback.empty:
-            positive_ratio = (relevant_feedback['user_rating'] == '👍').mean()
-            return 20 * (positive_ratio - 0.5)  # Adjust score by ±20 based on feedback
+            avg_rating = relevant_feedback['rating'].mean()
+            # Convert 1-5 rating to score adjustment (-20 to +20)
+            return (avg_rating - 3) * 10
     except FileNotFoundError:
         pass
     return 0
+
 
 
 def main():

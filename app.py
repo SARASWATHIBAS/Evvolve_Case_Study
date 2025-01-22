@@ -38,12 +38,11 @@ def calculate_feedback_adjustment(investor, startup):
         ]
         if not relevant_feedback.empty:
             avg_rating = relevant_feedback['rating'].mean()
-            # Convert 1-5 rating to score adjustment (-20 to +20)
-            return (avg_rating - 3) * 10
+            # Convert 1-5 rating to percentage adjustment (0-100)
+            return (avg_rating / 5) * 100
     except FileNotFoundError:
         pass
     return 0
-
 
 
 def main():
@@ -109,36 +108,66 @@ def main():
             original_results = matcher.find_matches(value_criteria=value_criteria,
                                                     attribute_criteria=attribute_criteria)
 
-            # Create adjusted results
+            # Create adjusted results with 100-scale weights
             adjusted_results = original_results.copy()
             for idx, row in adjusted_results.iterrows():
-                adjustment = calculate_feedback_adjustment(row['Investor'], row['Startup'])
-                adjusted_results.loc[idx, 'Score'] = min(100, max(0, row['Score'] + adjustment))
+                feedback_weight = calculate_feedback_adjustment(row['Investor'], row['Startup'])
+                original_weight = row['Score']
 
-            # Filter and display results
-            investor_matches_original = original_results[original_results['Investor'] == selected_investor].sort_values(
-                by='Score', ascending=False)
-            investor_matches_adjusted = adjusted_results[adjusted_results['Investor'] == selected_investor].sort_values(
-                by='Score', ascending=False)
+                # Combine original score and feedback score with equal weights
+                adjusted_score = (original_weight + feedback_weight) / 2
+                adjusted_results.loc[idx, 'Score'] = min(100, max(0, adjusted_score))
+
+            # Display results
+            investor_matches_original = original_results[
+                original_results['Investor'] == selected_investor
+                ].sort_values(by='Score', ascending=False)
+
+            investor_matches_adjusted = adjusted_results[
+                adjusted_results['Investor'] == selected_investor
+                ].sort_values(by='Score', ascending=False)
 
             col1, col2 = st.columns(2)
             with col1:
-                st.write("Original Matches")
-                st.dataframe(investor_matches_original)
-            with col2:
-                st.write("Feedback-Adjusted Matches")
-                st.dataframe(investor_matches_adjusted)
+                st.write("Original Matches (0-100)")
+                st.dataframe(
+                    investor_matches_original.style.background_gradient(
+                        subset=['Score'],
+                        cmap='YlOrRd',
+                        vmin=0,
+                        vmax=100
+                    )
+                )
 
-            # Comparison view
+            with col2:
+                st.write("Feedback-Adjusted Matches (0-100)")
+                st.dataframe(
+                    investor_matches_adjusted.style.background_gradient(
+                        subset=['Score'],
+                        cmap='YlOrRd',
+                        vmin=0,
+                        vmax=100
+                    )
+                )
+
+            # Score comparison with percentage differences
             st.subheader("Score Comparison")
             comparison_df = pd.DataFrame({
                 'Startup': investor_matches_original['Startup'],
                 'Original Score': investor_matches_original['Score'].round(2),
                 'Adjusted Score': investor_matches_adjusted['Score'].round(2),
-                'Score Difference': (investor_matches_adjusted['Score'] - investor_matches_original['Score']).round(2)
+                'Score Difference (%)': (
+                (investor_matches_adjusted['Score'] - investor_matches_original['Score'])).round(2)
             })
-            st.dataframe(comparison_df)
-            st.subheader("Provide Feedback")
+
+            st.dataframe(
+                comparison_df.style.background_gradient(
+                    subset=['Score Difference (%)'],
+                    cmap='RdYlGn'
+                )
+            )
+
+        st.subheader("Provide Feedback")
 
             for idx, match in original_results.iterrows():
                 match_key = f"{match['Investor']}_{match['Startup']}"

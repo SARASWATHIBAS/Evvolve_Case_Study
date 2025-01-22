@@ -169,32 +169,32 @@ def main():
 
         st.subheader("Provide Feedback")
 
-                for idx, match in original_results.iterrows():
-                    match_key = f"{match['Investor']}_{match['Startup']}"
+        for idx, match in original_results.iterrows():
+            match_key = f"{match['Investor']}_{match['Startup']}"
 
-                    if (match['Investor'], match['Startup']) not in st.session_state.feedback_submitted:
-                        with st.expander(f"Rate match with {match['Startup']}"):
-                            feedback = streamlit_feedback(
-                                feedback_type="thumbs",
-                                optional_text_label="[Optional] Please provide an explanation",
-                                align="flex-start",
-                                key=f"feedback_{match_key}"
+            if (match['Investor'], match['Startup']) not in st.session_state.feedback_submitted:
+                with st.expander(f"Rate match with {match['Startup']}"):
+                    feedback = streamlit_feedback(
+                        feedback_type="thumbs",
+                        optional_text_label="[Optional] Please provide an explanation",
+                        align="flex-start",
+                        key=f"feedback_{match_key}"
+                    )
+
+                    if feedback:
+                        try:
+                            handle_feedback(
+                                match['Investor'],
+                                match['Startup'],
+                                match['Score'],
+                                "👍" if feedback['score'] == 1 else "👎",
+                                feedback.get('text', '')
                             )
-
-                            if feedback:
-                                try:
-                                    handle_feedback(
-                                        match['Investor'],
-                                        match['Startup'],
-                                        match['Score'],
-                                        "👍" if feedback['score'] == 1 else "👎",
-                                        feedback.get('text', '')
-                                    )
-                                    st.success("Thank you for your feedback! It has been saved and pushed to Git.")
-                                except Exception as e:
-                                    st.error(f"An error occurred while saving feedback: {str(e)}")
-                    else:
-                        st.info("✓ Feedback submitted")
+                            st.success("Thank you for your feedback! It has been saved and pushed to Git.")
+                        except Exception as e:
+                            st.error(f"An error occurred while saving feedback: {str(e)}")
+            else:
+                st.info("✓ Feedback submitted")
 
 
         else:

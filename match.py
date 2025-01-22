@@ -1,5 +1,11 @@
-
 import pandas as pd
+from word_matcher import WordMatcher
+import zipfile
+
+with zipfile.ZipFile('vector.zip', 'r') as zip_ref:
+    zip_ref.extractall('Vector/')
+
+matcher = WordMatcher("Vector/wiki-news-300d-1M.vec")
 
 class InvestorMatcher:
     def __init__(self, investors_file, startups_file):
@@ -98,7 +104,7 @@ class InvestorMatcher:
             score += weights['domain_match']
         investor_past_portfolio = investor.get('Past_Portfolio', 0).split(',')
         # Sector match
-        score += (weights['sector_match'] * (self.calculate_portfolio_fit_score(
+        score += (weights['sector_match'] * (matcher.get_similarity(
             investor_past_portfolio,
             startup.get('Sector',0))
         ) / 100)

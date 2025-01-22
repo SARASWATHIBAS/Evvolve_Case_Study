@@ -1,32 +1,20 @@
 import streamlit as st
+from streamlit_feedback import streamlit_feedback
 import pandas as pd
-from match import InvestorMatcher
-from git import Repo
-
 
 # Initialize session state for feedback
 if 'feedback_submitted' not in st.session_state:
     st.session_state.feedback_submitted = set()
 
-def save_feedback_to_git(feedback_data):
-    """Save feedback to CSV and push to Git repository"""
+def save_feedback_to_csv(feedback_data):
+    """Save feedback to CSV file"""
     csv_file = 'feedback.csv'
     try:
         existing_feedback = pd.read_csv(csv_file)
-        updated_feedback = pd.concat([existing_feedback, pd.DataFrame([feedback_data])])
+        updated_feedback = pd.concat([existing_feedback, pd.DataFrame([feedback_data])], ignore_index=True)
     except FileNotFoundError:
         updated_feedback = pd.DataFrame([feedback_data])
     updated_feedback.to_csv(csv_file, index=False)
-
-    print("IIII")
-
-    # Push CSV to Git repository
-    repo_path = '.'  # Assuming the script is running in the Git repo directory
-    repo = Repo(repo_path)
-    repo.git.add(csv_file)
-    repo.index.commit("Update feedback CSV")
-    origin = repo.remote(name='origin')
-    origin.push()
 
 def handle_feedback(investor, startup, score, rating, comment):
     feedback_data = {
@@ -37,8 +25,9 @@ def handle_feedback(investor, startup, score, rating, comment):
         'comment': comment,
         'timestamp': pd.Timestamp.now()
     }
-    save_feedback_to_git(feedback_data)
+    save_feedback_to_csv(feedback_data)
     st.session_state.feedback_submitted.add((investor, startup))
+
 
 def main():
     st.title("Investor-Startup Matching Platform")
@@ -112,31 +101,28 @@ def main():
 
                 if (match['Investor'], match['Startup']) not in st.session_state.feedback_submitted:
                     with st.expander(f"Rate match with {match['Startup']}"):
-                        rating = st.radio(
-                            "Rating",
-                            options=['⭐', '⭐⭐', '⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐⭐⭐'],
-                            key=f"rating_{match_key}",
-                            horizontal=True
-                        )
-                        comment = st.text_area(
-                            "Additional Comments (optional)",
-                            key=f"comment_{match_key}"
+                        feedback = streamlit_feedback(
+                            feedback_type="thumbs",
+                            optional_text_label="[Optional] Please provide an explanation",
+                            align="flex-start",
+                            key=f"feedback_{match_key}"
                         )
 
-                        print("HHHH")
-
-                        if st.button("Submit Feedback", key=f"submit_{match_key}"):
-                            rating_value = len(rating)
-                            handle_feedback(
-                                match['Investor'],
-                                match['Startup'],
-                                match['Score'],
-                                rating_value,
-                                comment
-                            )
-                            st.success("Thank you for your feedback!")
+                        if feedback:
+                            try:
+                                handle_feedback(
+                                    match['Investor'],
+                                    match['Startup'],
+                                    match['Score'],
+                                    "👍" if feedback['score'] == 1 else "👎",
+                                    feedback.get('text', '')
+                                )
+                                st.success("Thank you for your feedback! It has been saved and pushed to Git.")
+                            except Exception as e:
+                                st.error(f"An error occurred while saving feedback: {str(e)}")
                 else:
                     st.info("✓ Feedback submitted")
+
 
     else:
                 selected_startup = st.selectbox(

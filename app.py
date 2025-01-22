@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_feedback import streamlit_feedback
 import pandas as pd
 from match import InvestorMatcher
+import matplotlib
 
 # Initialize session state for feedback
 if 'feedback_submitted' not in st.session_state:

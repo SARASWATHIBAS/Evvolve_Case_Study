@@ -226,7 +226,7 @@ def main():
             st.subheader("Investor-Startup Match Heatmap")
             
             # Calculate overall match score
-            df_to_visualize['Match_Score'] = df_to_visualize[['Domain_Score', 'Sector_Score', 'Fund_Score', 'Risk_Score']].mean(axis=1)
+            df_to_visualize['Match_Score'] = df_to_visualize[['Domain', 'Sector', 'Fund', 'Risk']].mean(axis=1)
             
             # Pivot the data to create a matrix of investors and startups
             heatmap_data = df_to_visualize.pivot(index="Investor", columns="Startup", values="Match_Score")
@@ -253,7 +253,7 @@ def main():
             match_scores = df_to_visualize[
                 (df_to_visualize['Investor'] == selected_investor) & 
                 (df_to_visualize['Startup'] == selected_startup)
-            ][['Domain_Score', 'Sector_Score', 'Fund_Score', 'Risk_Score']].iloc[0]
+            ][['Domain', 'Sector', 'Fund', 'Risk']].iloc[0]
             
             # Create radar chart using Plotly
             categories = list(match_scores.index)
@@ -281,7 +281,7 @@ def main():
             st.subheader("Investor-Startup Match Bubble Chart")
             
             # Calculate overall match score
-            df_to_visualize['Match_Score'] = df_to_visualize[['Domain_Score', 'Sector_Score', 'Fund_Score', 'Risk_Score']].mean(axis=1)
+            df_to_visualize['Match_Score'] = df_to_visualize[['Domain', 'Sector', 'Fund', 'Risk']].mean(axis=1)
             
             # Create bubble chart using Plotly
             fig = px.scatter(df_to_visualize, 

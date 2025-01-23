@@ -76,7 +76,7 @@ def main():
 
         if search_type == "Find matches for an Investor":
             selected_investor = st.selectbox(
-                "Select Investors",
+                "Select Investors Group",
                 investor_names
             )
             # Add radio buttons for preference

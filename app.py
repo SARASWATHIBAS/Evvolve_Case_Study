@@ -353,7 +353,6 @@ def main():
                 (df_to_visualize['Startup'] == selected_startup)
                 ].iloc[0]
             interpretation = provide_dynamic_interpretation(viz_type, df_to_visualize, selected_data)
-            st.write(interpretation)
             display_beautiful_interpretation(interpretation)
 
         elif viz_type == "Bubble Chart":

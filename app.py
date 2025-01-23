@@ -6,6 +6,87 @@ import matplotlib
 import plotly.graph_objects as go
 import plotly.express as px
 
+# Main Components:
+"""
+1. Feedback System:
+   - Initializes session state for tracking submitted feedback
+   - Saves feedback to CSV with timestamp and rating
+   - Calculates feedback adjustments for match scores
+
+2. Visualization System:
+   - Three types of visualizations: Heatmap, Radar Chart, Bubble Chart
+   - Dynamic interpretation for each visualization type
+   - Beautiful display formatting for insights
+
+3. Matching System:
+   - Two search modes: Investor-based and Startup-based
+   - Filtering by values (Growth, ROI, Stage) or attributes (Domain, Fund, Risk)
+   - Original and feedback-adjusted scoring
+"""
+
+# Key Functions:
+"""
+display_beautiful_interpretation():
+- Creates formatted display of insights using Streamlit markdown
+- Organizes points with bullet styling and emojis
+- Uses expandable sections for better UI
+
+provide_dynamic_interpretation():
+- Analyzes data based on visualization type
+- Calculates key metrics like high matches, averages, top pairs
+- Provides specific insights for each chart type
+- Returns formatted interpretation string
+
+save_feedback_to_csv():
+- Manages feedback persistence in CSV format
+- Handles both new and existing feedback files
+- Maintains feedback history with timestamps
+
+handle_feedback():
+- Processes user feedback submissions
+- Updates session state to track submitted feedback
+- Triggers feedback storage
+
+calculate_feedback_adjustment():
+- Computes score adjustments based on user feedback
+- Converts ratings to percentage-based adjustments
+- Handles missing feedback gracefully
+"""
+
+# Main Function Structure:
+"""
+1. Tab 1 - Matching:
+   - Search type selection
+   - Criteria selection (Value/Attributes)
+   - Results display with original and adjusted scores
+   - Feedback collection interface
+
+2. Tab 2 - Visualization:
+   - Visualization type selection
+   - Data preparation for each chart type
+   - Chart rendering with Plotly
+   - Dynamic interpretation display
+"""
+
+# Data Flow:
+"""
+1. User Input → Matcher → Results
+2. Results → Visualization → Charts
+3. Charts → Interpretation → Insights
+4. User Feedback → Storage → Score Adjustment
+"""
+
+# Key Features:
+"""
+- Interactive UI with tabs and expandable sections
+- Real-time data analysis and visualization
+- Feedback system for continuous improvement
+- Dynamic insights generation
+- Multiple visualization options
+- Flexible search criteria
+"""
+
+
 # Initialize session state for feedback
 if 'feedback_submitted' not in st.session_state:
     st.session_state.feedback_submitted = set()

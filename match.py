@@ -1,5 +1,73 @@
 import pandas as pd
 
+"""
+InvestorMatcher Class Structure:
+
+1. Initialization (__init__):
+   - Loads investor and startup data from CSV files
+   - Sets up scoring weights for different matching criteria:
+     * Domain match: 20%
+     * Sector match: 20%
+     * Fund match: 30%
+     * Risk match: 30%
+   - Defines match threshold at 70%
+   - Creates empty DataFrame for visualization
+
+2. Fund Matching (calculate_fund_match_score):
+   - Evaluates investor funds against startup deal size
+   - Scoring tiers:
+     * 100 points: Within 150% of required funds
+     * 80 points: Within 200%
+     * 60 points: Within 300%
+     * 40 points: Above 300%
+     * 50 points: At least 75% of required funds
+     * 25 points: At least 50% of required funds
+     * 0 points: Below 50%
+
+3. Risk Appetite Matching (Risk_appetite_score):
+   - Compares investor risk appetite with startup risk assessment
+   - Perfect match: 100 points
+   - Adjacent risk levels: 50 points
+   - Two-level difference: 25 points
+
+4. Portfolio Fit Scoring (calculate_portfolio_fit_score):
+   - Matches startup sector with investor's portfolio history
+   - Sector categories:
+     * FinTech
+     * HealthTech
+     * AI/ML
+     * E-commerce
+     * Enterprise SaaS
+   - Perfect sector alignment: 100 points
+
+5. Match Score Calculation (calculate_match_score):
+   - Combines all scoring components with weights
+   - Tracks scores for visualization
+   - Components:
+     * Domain alignment
+     * Sector fit
+     * Fund availability
+     * Risk appetite match
+
+6. Match Finding (find_matches):
+   - Main matching algorithm
+   - Filtering options:
+     * Value-based (Growth, ROI, Stage)
+     * Attribute-based (Domain, Fund, Risk)
+   - Compatibility levels:
+     * High: ≥ 70%
+     * Medium: ≥ 52.5%
+     * Low: < 52.5%
+
+Key Features:
+- Comprehensive scoring system
+- Flexible filtering options
+- Data visualization support
+- Weighted criteria evaluation
+- Dynamic compatibility assessment
+"""
+
+
 class InvestorMatcher:
     def __init__(self, investors_file, startups_file):
 

@@ -4,3 +4,5 @@ streamlit_feedback
 matplotlib
 gensim
 plotly
+scikit-learn
+zipfile36

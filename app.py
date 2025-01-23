@@ -10,6 +10,58 @@ import plotly.express as px
 if 'feedback_submitted' not in st.session_state:
     st.session_state.feedback_submitted = set()
 
+
+def provide_dynamic_interpretation(viz_type, data, selected_data=None):
+    """
+    Provides dynamic interpretation based on visualization type and data patterns
+    """
+    if viz_type == "Heatmap":
+        # Calculate key metrics
+        high_matches = len(data[data['Match_Score'] >= 80])
+        avg_score = data['Match_Score'].mean()
+        top_pair = data.loc[data['Match_Score'].idxmax()]
+
+        interpretation = f"""
+        📊 Heatmap Analysis:
+        • Found {high_matches} strong matches (80%+ compatibility)
+        • Average match score across all pairs: {avg_score:.1f}%
+        • Strongest match: {top_pair['Investor']} - {top_pair['Startup']} ({top_pair['Match_Score']:.1f}%)
+        • Market concentration is highest in {data.groupby('Sector')['Match_Score'].mean().idxmax()} sector
+        """
+
+    elif viz_type == "Radar Chart":
+        # Analyze component scores
+        scores = selected_data[['Domain', 'Sector', 'Fund', 'Risk']]
+        strongest = scores.idxmax()
+        weakest = scores.idxmin()
+
+        interpretation = f"""
+        🎯 Radar Chart Analysis:
+        • Strongest dimension: {strongest} ({scores[strongest]:.1f}%)
+        • Area for improvement: {weakest} ({scores[weakest]:.1f}%)
+        • Overall balance score: {scores.std():.1f} (lower is better)
+        • Match quality is {scores.mean():.1f}% on average across all dimensions
+        """
+
+    elif viz_type == "Bubble Chart":
+        # Analyze distribution
+        excellent = len(data[data['Match_Score'] >= 90])
+        good = len(data[data['Match_Score'].between(70, 90)])
+        avg_score = data['Match_Score'].mean()
+
+        interpretation = f"""
+        💫 Bubble Chart Analysis:
+        • {excellent} excellent matches (90%+ compatibility)
+        • {good} good matches (70-90% compatibility)
+        • Market average match score: {avg_score:.1f}%
+        • Most active investor: {data.groupby('Investor').size().idxmax()}
+        • Most sought-after startup: {data.groupby('Startup').size().idxmax()}
+        """
+
+    return interpretation
+
+
+
 def save_feedback_to_csv(feedback_data):
     """Save feedback to CSV file"""
     csv_file = 'feedback.csv'
@@ -239,6 +291,8 @@ def main():
                             color_continuous_scale="YlOrRd")
             
             st.plotly_chart(fig)
+            interpretation = provide_dynamic_interpretation(viz_type, df_to_visualize)
+            st.write(interpretation)
         
         elif viz_type == "Radar Chart":
             st.subheader("Investor-Startup Match Radar Chart")
@@ -276,7 +330,13 @@ def main():
             )
             
             st.plotly_chart(fig)
-        
+            selected_data = df_to_visualize[
+                (df_to_visualize['Investor'] == selected_investor) &
+                (df_to_visualize['Startup'] == selected_startup)
+                ].iloc[0]
+            interpretation = provide_dynamic_interpretation(viz_type, df_to_visualize, selected_data)
+            st.write(interpretation)
+
         elif viz_type == "Bubble Chart":
             st.subheader("Investor-Startup Match Bubble Chart")
             
@@ -300,7 +360,8 @@ def main():
             )
             
             st.plotly_chart(fig)
-
+            interpretation = provide_dynamic_interpretation(viz_type, df_to_visualize)
+            st.write(interpretation)
 
 if __name__ == "__main__":
     main()

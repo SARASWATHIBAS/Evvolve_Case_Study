@@ -112,13 +112,18 @@ class InvestorMatcher:
         # Risk appetite match
         risk_score = (weights['risk_match'] * self.Risk_appetite_score(investor, startup))/100
         score += risk_score
-        self.toVisualize = self.toVisualize.append({'Investor': investor.get('Investor_Group_Name', 'Unknown'),
-                                                    'Startup': startup.get('Company_Name', 'Unknown'),
-                                                    'Domain': domain_score,
-                                                    'Sector': sector_score,
-                                                    'Fund': fund_score,
-                                                    'Risk': risk_score,}, ignore_index=True)
-        return score
+        # Update visualization DataFrame using concat instead of append
+        new_row = pd.DataFrame({
+            'Investor': [investor.get('Investor_Group_Name', 'Unknown')],
+            'Startup': [startup.get('Company_Name', 'Unknown')],
+            'Domain': [domain_score],
+            'Sector': [sector_score],
+            'Fund': [fund_score],
+            'Risk': [risk_score]
+        })
+        self.toVisualize = pd.concat([self.toVisualize, new_row], ignore_index=True)
+
+    return score
 
 
     def find_matches(self, value_criteria=None, attribute_criteria=None):

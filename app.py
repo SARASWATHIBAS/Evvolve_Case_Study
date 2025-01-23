@@ -215,7 +215,7 @@ def main():
                 st.dataframe(startup_matches)
     with tab2:
         st.header("Investor-Startup Match Visualization")
-    
+        matcher.find_matches()
         # Get the toVisualize dataframe from the InvestorMatcher class
         df_to_visualize = matcher.toVisualize
         

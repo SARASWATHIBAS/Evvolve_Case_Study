@@ -12,6 +12,7 @@ class InvestorMatcher:
             "risk_match": 30
         }
         self.match_threshold = 70
+        self.toVisualize = pd.DataFrame()
 
     def calculate_fund_match_score(self,investor_funds, startup_deal):
         """
@@ -94,20 +95,29 @@ class InvestorMatcher:
         score = 0
         # Domain match
         if investor.get('Domain') == startup.get('Domain'):
-            score += weights['domain_match']
+            domain_score = weights['domain_match']
+            score += domain_score
         investor_past_portfolio = investor.get('Past_Portfolio', 0).split(',')
         # Sector match
-        score += (weights['sector_match'] * (self.calculate_portfolio_fit_score(
+        sector_score = (weights['sector_match'] * (matcher.get_similarity(
             investor_past_portfolio,
-            startup.get('Sector',0))
-        ) / 100)
+            startup.get('Sector',0))) / 100)
+        score += sector_score
         # Fund availability match
-        score += (weights['fund_match'] * (self.calculate_fund_match_score(
+        fund_score = (weights['fund_match'] * (self.calculate_fund_match_score(
             investor.get('Fund_Available', 0),
             startup.get('Deal', 0))
         )/100)
+        score += fund_score
         # Risk appetite match
-        score += (weights['risk_match'] * self.Risk_appetite_score(investor, startup))/100
+        risk_score = (weights['risk_match'] * self.Risk_appetite_score(investor, startup))/100
+        score += risk_score
+        self.toVisualize = self.toVisualize.append({'Investor': investor.get('Investor_Group_Name', 'Unknown'),
+                                                    'Startup': startup.get('Company_Name', 'Unknown'),
+                                                    'Domain': domain_score,
+                                                    'Sector': sector_score,
+                                                    'Fund': fund_score,
+                                                    'Risk': risk_score,}, ignore_index=True)
         return score
 
 

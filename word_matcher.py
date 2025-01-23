@@ -4,7 +4,7 @@ import numpy as np
 
 class WordMatcher:
     def __init__(self, model_path: str):
-        self.model = KeyedVectors.load_word2vec_format(model_path, binary=True)
+        self.model = KeyedVectors.load(model_path, binary=True)
     
     def get_similarity(self, words: list, sector: str) -> float:
         total_score = 0

@@ -5,7 +5,7 @@ import zipfile
 with zipfile.ZipFile('wiki-news-300d-1M.vec.zip', 'r') as zip_ref:
     zip_ref.extractall('Vector/')
 
-matcher = WordMatcher("Vector/wiki-news-300d-1M.vec")
+matcher = WordMatcher(r'Vector/wiki-news-300d-1M.vec')
 
 class InvestorMatcher:
     def __init__(self, investors_file, startups_file):

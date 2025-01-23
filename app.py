@@ -3,6 +3,8 @@ from streamlit_feedback import streamlit_feedback
 import pandas as pd
 from match import InvestorMatcher
 import matplotlib
+import plotly.graph_objects as go
+import plotly.express as px
 
 # Initialize session state for feedback
 if 'feedback_submitted' not in st.session_state:
@@ -48,157 +50,159 @@ def calculate_feedback_adjustment(investor, startup):
 
 def main():
     st.title("Investor-Startup Matching Platform")
-    # Initialize session states
-    if 'feedback_submitted' not in st.session_state:
-        st.session_state.feedback_submitted = set()
+    tab1, tab2 = st.tabs(["Matching", "Visualization"])
+    with tab1:
+        # Initialize session states
+        if 'feedback_submitted' not in st.session_state:
+            st.session_state.feedback_submitted = set()
 
-    value_criteria = {}
-    attribute_criteria = []
-    # Initialize matcher
-    matcher = InvestorMatcher(
-        investors_file="investors.csv",
-        startups_file="startups.csv"
-    )
-
-    # Create selection options from actual data
-    investor_names = matcher.investors['Investor_Group_Name'].tolist()
-    startup_names = matcher.startups['Company_Name'].tolist()
-
-    # Selection type radio button
-    search_type = st.radio(
-        "Select search type:",
-        ["Find matches for an Investor", "Find matches for a Startup"]
-    )
-
-    if search_type == "Find matches for an Investor":
-        selected_investor = st.selectbox(
-            "Select Investor",
-            investor_names
+        value_criteria = {}
+        attribute_criteria = []
+        # Initialize matcher
+        matcher = InvestorMatcher(
+            investors_file="investors.csv",
+            startups_file="startups.csv"
         )
-        # Add radio buttons for preference
-        preference_type = st.radio(
-            "Select preference type:",
-            ["By Value", "By Attributes"]
+
+        # Create selection options from actual data
+        investor_names = matcher.investors['Investor_Group_Name'].tolist()
+        startup_names = matcher.startups['Company_Name'].tolist()
+
+        # Selection type radio button
+        search_type = st.radio(
+            "Select search type:",
+            ["Find matches for an Investor", "Find matches for a Startup"]
         )
-        if preference_type == "By Value":
-            st.write("Select Value Criteria:")
-            growth_potential = st.checkbox("Growth Potential")
-            roi = st.checkbox("ROI")
-            investment_stage = st.checkbox("Investment Stage")
-            
-            if growth_potential:
-                value_criteria["Growth Potential"] = st.text_input("Enter value for Growth Potential (High, Medium, Low):")
-            if roi:
-                value_criteria["ROI"] = st.text_input("Enter value for ROI:")
-            if investment_stage:
-                value_criteria["Investment Stage"] = st.text_input("Enter value for Investment Stage (Growth, Seed, Series A, Series B):")
-        elif preference_type == "By Attributes":
-            st.write("Select Attribute Criteria:")
-            market_size = st.checkbox("Domain")
-            team_experience = st.checkbox("Fund Availability")
-            product_uniqueness = st.checkbox("Risk Appetitie")
-            
-            if market_size:
-                attribute_criteria.append("Domain")
-            if team_experience:
-                attribute_criteria.append("Fund Availability")
-            if product_uniqueness:
-                attribute_criteria.append("Risk Appetitie")
-        if st.button("Find Matches"):
-            # Get original results
-            original_results = matcher.find_matches(value_criteria=value_criteria,
-                                                    attribute_criteria=attribute_criteria)
 
-            # Create adjusted results with 100-scale weights
-            adjusted_results = original_results.copy()
-            for idx, row in adjusted_results.iterrows():
-                feedback_weight = calculate_feedback_adjustment(row['Investor'], row['Startup'])
-                original_weight = row['Score']
-
-                # Combine original score and feedback score with equal weights
-                adjusted_score = (original_weight + feedback_weight) / 2
-                adjusted_results.loc[idx, 'Score'] = min(100, max(0, adjusted_score))
-
-            # Display results
-            investor_matches_original = original_results[
-                original_results['Investor'] == selected_investor
-                ].sort_values(by='Score', ascending=False)
-
-            investor_matches_adjusted = adjusted_results[
-                adjusted_results['Investor'] == selected_investor
-                ].sort_values(by='Score', ascending=False)
-
-            col1, col2 = st.columns(2)
-            with col1:
-                st.write("Original Matches (0-100)")
-                st.dataframe(
-                    investor_matches_original.style.background_gradient(
-                        subset=['Score'],
-                        cmap='YlOrRd',
-                        vmin=0,
-                        vmax=100
-                    )
-                )
-
-            with col2:
-                st.write("Feedback-Adjusted Matches (0-100)")
-                st.dataframe(
-                    investor_matches_adjusted.style.background_gradient(
-                        subset=['Score'],
-                        cmap='YlOrRd',
-                        vmin=0,
-                        vmax=100
-                    )
-                )
-
-            # Score comparison with percentage differences
-            st.subheader("Score Comparison")
-            comparison_df = pd.DataFrame({
-                'Startup': investor_matches_original['Startup'],
-                'Original Score': investor_matches_original['Score'].round(2),
-                'Adjusted Score': investor_matches_adjusted['Score'].round(2),
-                'Score Difference (%)': (
-                (investor_matches_adjusted['Score'] - investor_matches_original['Score'])).round(2)
-            })
-
-            st.dataframe(
-                comparison_df.style.background_gradient(
-                    subset=['Score Difference (%)'],
-                    cmap='RdYlGn'
-                )
+        if search_type == "Find matches for an Investor":
+            selected_investor = st.selectbox(
+                "Select Investor",
+                investor_names
             )
+            # Add radio buttons for preference
+            preference_type = st.radio(
+                "Select preference type:",
+                ["By Value", "By Attributes"]
+            )
+            if preference_type == "By Value":
+                st.write("Select Value Criteria:")
+                growth_potential = st.checkbox("Growth Potential")
+                roi = st.checkbox("ROI")
+                investment_stage = st.checkbox("Investment Stage")
+                
+                if growth_potential:
+                    value_criteria["Growth Potential"] = st.text_input("Enter value for Growth Potential (High, Medium, Low):")
+                if roi:
+                    value_criteria["ROI"] = st.text_input("Enter value for ROI:")
+                if investment_stage:
+                    value_criteria["Investment Stage"] = st.text_input("Enter value for Investment Stage (Growth, Seed, Series A, Series B):")
+            elif preference_type == "By Attributes":
+                st.write("Select Attribute Criteria:")
+                market_size = st.checkbox("Domain")
+                team_experience = st.checkbox("Fund Availability")
+                product_uniqueness = st.checkbox("Risk Appetitie")
+                
+                if market_size:
+                    attribute_criteria.append("Domain")
+                if team_experience:
+                    attribute_criteria.append("Fund Availability")
+                if product_uniqueness:
+                    attribute_criteria.append("Risk Appetitie")
+            if st.button("Find Matches"):
+                # Get original results
+                original_results = matcher.find_matches(value_criteria=value_criteria,
+                                                        attribute_criteria=attribute_criteria)
 
-            st.subheader("Provide Feedback")
+                # Create adjusted results with 100-scale weights
+                adjusted_results = original_results.copy()
+                for idx, row in adjusted_results.iterrows():
+                    feedback_weight = calculate_feedback_adjustment(row['Investor'], row['Startup'])
+                    original_weight = row['Score']
 
-            for idx, match in original_results.iterrows():
-                match_key = f"{match['Investor']}_{match['Startup']}"
+                    # Combine original score and feedback score with equal weights
+                    adjusted_score = (original_weight + feedback_weight) / 2
+                    adjusted_results.loc[idx, 'Score'] = min(100, max(0, adjusted_score))
 
-                if (match['Investor'], match['Startup']) not in st.session_state.feedback_submitted:
-                    with st.expander(f"Rate match with {match['Startup']}"):
-                        feedback = streamlit_feedback(
-                            feedback_type="thumbs",
-                            optional_text_label="[Optional] Please provide an explanation",
-                            align="flex-start",
-                            key=f"feedback_{match_key}"
+                # Display results
+                investor_matches_original = original_results[
+                    original_results['Investor'] == selected_investor
+                    ].sort_values(by='Score', ascending=False)
+
+                investor_matches_adjusted = adjusted_results[
+                    adjusted_results['Investor'] == selected_investor
+                    ].sort_values(by='Score', ascending=False)
+
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.write("Original Matches (0-100)")
+                    st.dataframe(
+                        investor_matches_original.style.background_gradient(
+                            subset=['Score'],
+                            cmap='YlOrRd',
+                            vmin=0,
+                            vmax=100
                         )
+                    )
 
-                        if feedback:
-                            try:
-                                handle_feedback(
-                                    match['Investor'],
-                                    match['Startup'],
-                                    match['Score'],
-                                    "👍" if feedback['score'] == 1 else "👎",
-                                    feedback.get('text', '')
-                                )
-                                st.success("Thank you for your feedback! It has been saved and pushed to Git.")
-                            except Exception as e:
-                                st.error(f"An error occurred while saving feedback: {str(e)}")
+                with col2:
+                    st.write("Feedback-Adjusted Matches (0-100)")
+                    st.dataframe(
+                        investor_matches_adjusted.style.background_gradient(
+                            subset=['Score'],
+                            cmap='YlOrRd',
+                            vmin=0,
+                            vmax=100
+                        )
+                    )
+
+                # Score comparison with percentage differences
+                st.subheader("Score Comparison")
+                comparison_df = pd.DataFrame({
+                    'Startup': investor_matches_original['Startup'],
+                    'Original Score': investor_matches_original['Score'].round(2),
+                    'Adjusted Score': investor_matches_adjusted['Score'].round(2),
+                    'Score Difference (%)': (
+                    (investor_matches_adjusted['Score'] - investor_matches_original['Score'])).round(2)
+                })
+
+                st.dataframe(
+                    comparison_df.style.background_gradient(
+                        subset=['Score Difference (%)'],
+                        cmap='RdYlGn'
+                    )
+                )
+
+                st.subheader("Provide Feedback")
+
+                for idx, match in original_results.iterrows():
+                    match_key = f"{match['Investor']}_{match['Startup']}"
+
+                    if (match['Investor'], match['Startup']) not in st.session_state.feedback_submitted:
+                        with st.expander(f"Rate match with {match['Startup']}"):
+                            feedback = streamlit_feedback(
+                                feedback_type="thumbs",
+                                optional_text_label="[Optional] Please provide an explanation",
+                                align="flex-start",
+                                key=f"feedback_{match_key}"
+                            )
+
+                            if feedback:
+                                try:
+                                    handle_feedback(
+                                        match['Investor'],
+                                        match['Startup'],
+                                        match['Score'],
+                                        "👍" if feedback['score'] == 1 else "👎",
+                                        feedback.get('text', '')
+                                    )
+                                    st.success("Thank you for your feedback! It has been saved and pushed to Git.")
+                                except Exception as e:
+                                    st.error(f"An error occurred while saving feedback: {str(e)}")
+                    else:
+                        st.info("✓ Feedback submitted")
+
+
                 else:
-                    st.info("✓ Feedback submitted")
-
-
-            else:
                         selected_startup = st.selectbox(
                             "Select Startup",
                             startup_names
@@ -209,6 +213,88 @@ def main():
 
                             st.subheader(f"Matches for {selected_startup}")
                             st.dataframe(startup_matches)
+    with tab2:
+        # New visualization code goes here
+        st.header("Investor-Startup Match Visualization")
+        
+        # Dropdown for selecting visualization type
+        viz_type = st.selectbox("Select Visualization Type", ["Heatmap", "Radar Chart", "Bubble Chart"])
+        
+        if viz_type == "Heatmap":
+            # Heatmap visualization
+            st.subheader("Investor-Startup Match Heatmap")
+            
+            # Get all match scores
+            all_matches = matcher.find_matches()
+            
+            # Pivot the data to create a matrix of investors and startups
+            heatmap_data = all_matches.pivot(index="Investor", columns="Startup", values="Score")
+            
+            # Create heatmap using Plotly
+            fig = px.imshow(heatmap_data, 
+                            labels=dict(x="Startup", y="Investor", color="Match Score"),
+                            x=heatmap_data.columns,
+                            y=heatmap_data.index,
+                            color_continuous_scale="YlOrRd")
+            
+            st.plotly_chart(fig)
+        
+        elif viz_type == "Radar Chart":
+            # Radar Chart visualization
+            st.subheader("Investor-Startup Match Radar Chart")
+            
+            selected_investor = st.selectbox("Select Investor", investor_names)
+            selected_startup = st.selectbox("Select Startup", startup_names)
+            
+            # Get match scores for selected investor and startup
+            match_scores = matcher.get_match_scores(selected_investor, selected_startup)
+            
+            # Create radar chart using Plotly
+            categories = list(match_scores.keys())
+            fig = go.Figure()
+            
+            fig.add_trace(go.Scatterpolar(
+                r=list(match_scores.values()),
+                theta=categories,
+                fill='toself',
+                name='Match Scores'
+            ))
+            
+            fig.update_layout(
+                polar=dict(
+                    radialaxis=dict(
+                        visible=True,
+                        range=[0, 100]
+                    )),
+                showlegend=False
+            )
+            
+            st.plotly_chart(fig)
+        
+        elif viz_type == "Bubble Chart":
+            # Bubble Chart visualization
+            st.subheader("Investor-Startup Match Bubble Chart")
+            
+            # Get all match scores
+            all_matches = matcher.find_matches()
+            
+            # Create bubble chart using Plotly
+            fig = px.scatter(all_matches, 
+                            x="Investor", 
+                            y="Startup", 
+                            size="Score", 
+                            color="Score",
+                            hover_name="Startup", 
+                            size_max=60,
+                            color_continuous_scale="YlOrRd")
+            
+            fig.update_layout(
+                xaxis_title="Investors",
+                yaxis_title="Startups",
+                coloraxis_colorbar=dict(title="Match Score")
+            )
+            
+            st.plotly_chart(fig)
 
 
 if __name__ == "__main__":

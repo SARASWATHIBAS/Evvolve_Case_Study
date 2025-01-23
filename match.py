@@ -93,6 +93,7 @@ class InvestorMatcher:
         Calculate a match score between an investor and a startup based on weights.
         """
         score = 0
+        domain_score=0
         # Domain match
         if investor.get('Domain') == startup.get('Domain'):
             domain_score = weights['domain_match']

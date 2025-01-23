@@ -123,7 +123,7 @@ class InvestorMatcher:
         })
         self.toVisualize = pd.concat([self.toVisualize, new_row], ignore_index=True)
 
-    return score
+        return score
 
 
     def find_matches(self, value_criteria=None, attribute_criteria=None):

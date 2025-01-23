@@ -11,6 +11,24 @@ if 'feedback_submitted' not in st.session_state:
     st.session_state.feedback_submitted = set()
 
 
+def display_beautiful_interpretation(interpretation):
+    """
+    Creates an elegant display for the chart interpretation
+    """
+    st.markdown("---")
+    st.markdown("### 📈 Data Insights")
+
+    # Create an expander for detailed analysis
+    with st.expander("View Detailed Analysis", expanded=True):
+        # Split the interpretation into bullet points
+        points = [point.strip() for point in interpretation.split('•') if point.strip()]
+
+        # Display each point in a clean format
+        for point in points:
+            st.markdown(f"🔹 {point}")
+
+    st.markdown("---")
+
 def provide_dynamic_interpretation(viz_type, data, selected_data=None):
     """
     Provides dynamic interpretation based on visualization type and data patterns
@@ -292,7 +310,7 @@ def main():
             
             st.plotly_chart(fig)
             interpretation = provide_dynamic_interpretation(viz_type, df_to_visualize)
-            st.write(interpretation)
+            display_beautiful_interpretation(interpretation)
         
         elif viz_type == "Radar Chart":
             st.subheader("Investor-Startup Match Radar Chart")
@@ -336,6 +354,7 @@ def main():
                 ].iloc[0]
             interpretation = provide_dynamic_interpretation(viz_type, df_to_visualize, selected_data)
             st.write(interpretation)
+            display_beautiful_interpretation(interpretation)
 
         elif viz_type == "Bubble Chart":
             st.subheader("Investor-Startup Match Bubble Chart")
@@ -361,7 +380,7 @@ def main():
             
             st.plotly_chart(fig)
             interpretation = provide_dynamic_interpretation(viz_type, df_to_visualize)
-            st.write(interpretation)
+            display_beautiful_interpretation(interpretation)
 
 if __name__ == "__main__":
     main()

@@ -99,7 +99,7 @@ class InvestorMatcher:
             score += domain_score
         investor_past_portfolio = investor.get('Past_Portfolio', 0).split(',')
         # Sector match
-        sector_score = (weights['sector_match'] * (matcher.get_similarity(
+        sector_score = (weights['sector_match'] * (self.calculate_portfolio_fit_score(
             investor_past_portfolio,
             startup.get('Sector',0))) / 100)
         score += sector_score

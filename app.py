@@ -202,19 +202,18 @@ def main():
                         st.info("✓ Feedback submitted")
 
 
-                else:
-                        selected_startup = st.selectbox(
-                            "Select Startup",
-                            startup_names
-                        )
-                        if st.button("Find Matches"):
-                            results = matcher.find_matches()
-                            startup_matches = results[results['Startup'] == selected_startup].sort_values(by='Score',ascending=False)
+        else:
+            selected_startup = st.selectbox(
+                "Select Startup",
+                startup_names
+            )
+            if st.button("Find Matches"):
+                results = matcher.find_matches()
+                startup_matches = results[results['Startup'] == selected_startup].sort_values(by='Score',ascending=False)
 
-                            st.subheader(f"Matches for {selected_startup}")
-                            st.dataframe(startup_matches)
+                st.subheader(f"Matches for {selected_startup}")
+                st.dataframe(startup_matches)
     with tab2:
-        # New visualization code goes here
         st.header("Investor-Startup Match Visualization")
         
         # Dropdown for selecting visualization type

@@ -1,5 +1,6 @@
 import pandas as pd
-
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 """
 InvestorMatcher Class Structure:
 
@@ -155,23 +156,31 @@ class InvestorMatcher:
                     score = 100
         return score
 
-
     def calculate_match_score(self,investor, startup, weights):
         """
         Calculate a match score between an investor and a startup based on weights.
         """
         score = 0
         domain_score=0
+        
         # Domain match
         if investor.get('Domain') == startup.get('Domain'):
             domain_score = weights['domain_match']
             score += domain_score
-        investor_past_portfolio = investor.get('Past_Portfolio', 0).split(',')
+
         # Sector match
-        sector_score = (weights['sector_match'] * (self.calculate_portfolio_fit_score(
-            investor_past_portfolio,
-            startup.get('Sector',0))) / 100)
+        investor_past_portfolio = investor.get('Past_Portfolio', 0).split(',')
+        startup_sector = startup.get('Sector',0)
+        vectorizer = TfidfVectorizer()
+        vectors = vectorizer.fit_transform(investor_past_portfolio + [startup_sector])
+        similarity_matrix = cosine_similarity(vectors)
+        startup_similarities = similarity_matrix[-1, :-1]
+        sector_score = max(startup_similarities) * 100
+        # sector_score = (weights['sector_match'] * (self.calculate_portfolio_fit_score(
+        #     investor_past_portfolio,
+        #     )) / 100)
         score += sector_score
+
         # Fund availability match
         fund_score = (weights['fund_match'] * (self.calculate_fund_match_score(
             investor.get('Fund_Available', 0),
